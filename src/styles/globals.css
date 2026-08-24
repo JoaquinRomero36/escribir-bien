@@ -1,0 +1,207 @@
+:root {
+  /* === TU PALETA ORIGINAL (intocada) === */
+  --card: #ffffff;
+  --card-rgb: 255, 255, 255;
+  --ring: #aff33e;
+  --input: #e2e8f0;
+  --muted: #f1f5f9;
+  --accent: #f0fdf4;
+  --border: #e2e8f0;
+  --radius: 1rem;
+  --chart-1: #aff33e;
+  --chart-2: #334155;
+  --chart-3: #22c55e;
+  --chart-4: #64748b;
+  --chart-5: #94a3b8;
+  --popover: #ffffff;
+  --primary: #aff33e;
+  --sidebar: #ffffff;
+  --spacing: 0.25rem;
+  --font-mono: JetBrains Mono, monospace;
+  --font-sans: Inter, system-ui, sans-serif;
+  --secondary: #334155;
+  --background: #fbfcf8;
+  --font-serif: Georgia, serif;
+  --foreground: #0f172a;
+  --destructive: #ef4444;
+  --shadow-blur: 20px;
+  --shadow-color: #000000;
+  --sidebar-ring: #aff33e;
+  --shadow-spread: 0px;
+  --letter-spacing: -0.01em;
+  --shadow-opacity: 0.05;
+  --sidebar-accent: #f8fafc;
+  --sidebar-border: #f1f5f9;
+  --card-foreground: #0f172a;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 8px;
+  --sidebar-primary: #aff33e;
+  --muted-foreground: #64748b;
+  --accent-foreground: #166534;
+  --popover-foreground: #0f172a;
+  --primary-foreground: #000000;
+  --sidebar-foreground: #0f172a;
+  --secondary-foreground: #f8fafc;
+  --destructive-foreground: #ffffff;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-primary-foreground: #000000;
+
+  /* === NUEVOS TOKENS ESTRUCTURALES (añadidos, no reemplazan) === */
+  /* Radius scale semántico */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;    /* 4px  */
+  --radius-md: 0.5rem;     /* 8px  */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px (tu --radius original) */
+  --radius-2xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;
+
+  /* Spacing tokens (basados en tu --spacing: 0.25rem = 4px) */
+  --space-1: 0.25rem;   /* 4px  */
+  --space-2: 0.5rem;    /* 8px  */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.5rem;    /* 24px */
+  --space-6: 2rem;      /* 32px */
+  --space-7: 3rem;      /* 48px */
+  --space-8: 4rem;      /* 64px */
+  --space-9: 6rem;      /* 96px */
+
+  /* Shadows semánticos (basados en tus variables de shadow) */
+  --shadow-level-0: none;
+  --shadow-level-1: 0 1px 2px rgba(var(--shadow-color), calc(var(--shadow-opacity) * 0.5)), 0 1px 1px rgba(var(--shadow-color), calc(var(--shadow-opacity) * 0.3));
+  --shadow-level-2: 0 4px 8px rgba(var(--shadow-color), var(--shadow-opacity)), 0 2px 4px rgba(var(--shadow-color), calc(var(--shadow-opacity) * 0.7));
+  --shadow-level-3: var(--shadow-offset-x) var(--shadow-offset-y) var(--shadow-blur) var(--shadow-spread) rgba(var(--shadow-color), var(--shadow-opacity));
+  --shadow-level-4: 0 24px 48px rgba(var(--shadow-color), calc(var(--shadow-opacity) * 2)), 0 8px 16px rgba(var(--shadow-color), var(--shadow-opacity));
+  --shadow-glow-primary: 0 0 0 3px rgba(175, 243, 62, 0.25);
+  --shadow-glow-accent: 0 0 0 3px rgba(240, 253, 244, 0.4);
+
+  /* Motion tokens */
+  --motion-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-base: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Letter spacing extras */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide: 0.05em;
+}
+
+.dark {
+  /* === TU PALETA DARK ORIGINAL (intocada) === */
+  --card: #0f172a;
+  --card-rgb: 15, 23, 42;
+  --ring: #aff33e;
+  --input: #1e293b;
+  --muted: #1e293b;
+  --accent: #14532d;
+  --border: #1e293b;
+  --radius: 1rem;
+  --chart-1: #aff33e;
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #a855f7;
+  --chart-5: #f59e0b;
+  --popover: #0f172a;
+  --primary: #aff33e;
+  --sidebar: #020617;
+  --spacing: 0.25rem;
+  --font-mono: JetBrains Mono, monospace;
+  --font-sans: Inter, system-ui, sans-serif;
+  --secondary: #1e293b;
+  --background: #020617;
+  --font-serif: Georgia, serif;
+  --foreground: #f8fafc;
+  --destructive: #991b1b;
+  --shadow-blur: 25px;
+  --shadow-color: #000000;
+  --sidebar-ring: #aff33e;
+  --shadow-spread: 0px;
+  --letter-spacing: -0.01em;
+  --shadow-opacity: 0.4;
+  --sidebar-accent: #1e293b;
+  --sidebar-border: #1e293b;
+  --card-foreground: #f8fafc;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 10px;
+  --sidebar-primary: #aff33e;
+  --muted-foreground: #94a3b8;
+  --accent-foreground: #aff33e;
+  --popover-foreground: #f8fafc;
+  --primary-foreground: #000000;
+  --sidebar-foreground: #f8fafc;
+  --secondary-foreground: #f8fafc;
+  --destructive-foreground: #ffffff;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-primary-foreground: #000000;
+
+  /* === TOKENS ESTRUCTURALES ADAPTADOS A DARK === */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  --shadow-level-0: none;
+  --shadow-level-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.2);
+  --shadow-level-2: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-level-3: 0 12px 24px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-level-4: 0 24px 48px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-glow-primary: 0 0 0 3px rgba(175, 243, 62, 0.35);
+  --shadow-glow-accent: 0 0 0 3px rgba(20, 83, 45, 0.4);
+
+  --motion-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-base: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide: 0.05em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-glow-primary);
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.dark ::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
