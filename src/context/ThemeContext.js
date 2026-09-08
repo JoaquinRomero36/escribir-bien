@@ -2,12 +2,33 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
+function safeGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage deshabilitado (Safari privado) */
+  }
+}
+
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
+      const saved = safeGet('theme');
       if (saved) return saved;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      try {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+      } catch {
+        /* jsdom / browsers sin matchMedia */
+      }
+      return 'light';
     }
     return 'dark';
   });
@@ -16,7 +37,7 @@ export function ThemeProvider({ children }) {
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    localStorage.setItem('theme', theme);
+    safeSet('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

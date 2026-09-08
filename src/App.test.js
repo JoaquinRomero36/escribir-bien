@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renderiza el landing y el CTA principal', async () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /escribe sin dudar/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /empezar mi racha/i })).toBeInTheDocument();
 });

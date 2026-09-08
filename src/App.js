@@ -1,10 +1,12 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, Component } from 'react';
 import './styles/globals.css';
 import './App.css';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { ExerciseView } from './components/exercises/ExerciseView';
 import { CategorySelector } from './components/exercises/CategorySelector';
+import { FlashcardView } from './components/study/FlashcardView';
 import { InteractiveLetters } from './components/InteractiveLetters';
+import { Logo } from './components/Logo';
 import {
   TargetIcon,
   CardsIcon,
@@ -18,6 +20,42 @@ import {
   SunIcon,
   MoonIcon,
 } from './components/icons';
+
+/* ==================== ERROR BOUNDARY ==================== */
+
+class AppErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  handleReload = () => {
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="app">
+          <div className="container" style={{ paddingTop: '160px', textAlign: 'center' }}>
+            <h1 className="logo">Escribir Bien</h1>
+            <p className="muted" style={{ marginTop: 'var(--space-3)' }}>
+              Algo salió mal. Recargá la página para seguir practicando.
+            </p>
+            <button className="btn btn-primary btn-lg" style={{ marginTop: 'var(--space-5)' }} onClick={this.handleReload}>
+              Recargar
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /* ==================== ICON COMPONENTS ==================== */
 
@@ -42,7 +80,7 @@ function Header() {
   return (
     <header className="header">
       <div className="container header-content">
-        <h1 className="logo">Escribir Bien</h1>
+        <h1 className="logo brand-logo"><Logo /></h1>
         <ThemeToggle />
       </div>
     </header>
@@ -70,7 +108,7 @@ const DEMO_EXERCISES = [
   },
   {
     id: 3,
-    before: 'A ',
+    before: 'Vamos ',
     error: 'ver',
     after: ' si vienes',
     correction: 'a ver',
@@ -152,7 +190,6 @@ function HeroVisual() {
           className="demo-btn"
           onClick={goPrev}
           aria-label="Ejercicio anterior"
-          disabled={false}
         >
           <ChevronLeftIcon />
         </button>
@@ -163,7 +200,6 @@ function HeroVisual() {
           className="demo-btn"
           onClick={goNext}
           aria-label="Siguiente ejercicio"
-          disabled={false}
         >
           <ChevronRightIcon />
         </button>
@@ -218,6 +254,7 @@ function LandingPage({ onStart }) {
         <section className="hero" aria-labelledby="hero-title">
           <div className="container hero-content">
             <div className="hero-text">
+              <Logo showText={false} size={44} className="hero-logo" />
               <span className="badge">Tu ortografía habla por ti</span>
               <h2 id="hero-title" className="hero-title">
                 Escribe sin dudar. Gana el respeto que mereces.
@@ -321,50 +358,37 @@ function ResultsView({ result, onRetry, onHome }) {
     <div className="app">
       <Header />
 
-      <main className="main" style={{ paddingTop: '120px', paddingBottom: 'var(--space-9)' }}>
-        <div className="container" style={{ maxWidth: '520px', textAlign: 'center' }}>
-          <div className="result-card" style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)',
-            padding: 'var(--space-8)',
-            boxShadow: 'var(--shadow-level-3)',
-            animation: 'popIn 0.5s var(--motion-bounce)'
-          }}>
-            <div className="result-icon success" style={{
-              width: '80px', height: '80px', margin: '0 auto var(--space-4)',
-              background: 'linear-gradient(135deg, var(--chart-3), var(--primary))'
-            }}>
+      <main className="main results-main">
+        <div className="container results-container">
+          <div className="result-card">
+            <div className="result-icon success icon-lg">
               <CheckIcon className="icon-lg" />
             </div>
             
-            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: '800', margin: '0 0 var(--space-2)', color: 'var(--foreground)' }}>
+            <h2 className="results-title-lg">
               ¡Sesión completada!
             </h2>
             
-            <p style={{ fontSize: '1.125rem', color: 'var(--muted-foreground)', margin: '0 0 var(--space-6)' }}>
+            <p className="results-subtitle">
               Has terminado {result.total} ejercicios
             </p>
             
-            <div style={{
-              display: 'flex', justifyContent: 'center', gap: 'var(--space-6)',
-              marginBottom: 'var(--space-6)', flexWrap: 'wrap'
-            }}>
+            <div className="results-stats">
               <div className="stat-item">
-                <span className="stat-value" style={{ fontSize: '2.5rem', color: 'var(--primary)' }}>{result.correct}</span>
+                <span className="stat-value">{result.correct}</span>
                 <span className="stat-label">Aciertos</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value" style={{ fontSize: '2.5rem', color: 'var(--chart-3)' }}>{percentage}%</span>
+                <span className="stat-value stat-value-green">{percentage}%</span>
                 <span className="stat-label">Precisión</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value" style={{ fontSize: '2.5rem', color: 'var(--accent-foreground)' }}>{result.streak}</span>
+                <span className="stat-value stat-value-accent">{result.streak}</span>
                 <span className="stat-label">Mejor racha</span>
               </div>
             </div>
             
-            <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="results-actions">
               <button className="btn btn-primary btn-lg" onClick={onRetry}>
                 Repetir categoría
               </button>
@@ -388,7 +412,7 @@ function ResultsView({ result, onRetry, onHome }) {
 /* ==================== MAIN APP WITH STATE MACHINE ==================== */
 
 function AppContent() {
-  const [view, setView] = useState('landing'); // 'landing' | 'categories' | 'exercise' | 'results'
+  const [view, setView] = useState('landing'); // 'landing' | 'categories' | 'exercise' | 'results' | 'flashcards'
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [exerciseResult, setExerciseResult] = useState(null);
@@ -405,6 +429,11 @@ function AppContent() {
     setSelectedCategory(category);
     setExercises(categoryExercises);
     setView('exercise');
+  }, []);
+
+  const handleStudySelect = useCallback((category) => {
+    setSelectedCategory(category);
+    setView('flashcards');
   }, []);
 
   const handleExerciseComplete = useCallback((result) => {
@@ -439,6 +468,7 @@ function AppContent() {
       return (
         <CategorySelector
           onSelect={handleCategorySelect}
+          onStudy={handleStudySelect}
           onBack={handleBackFromCategories}
         />
       );
@@ -448,6 +478,13 @@ function AppContent() {
           category={selectedCategory}
           exercises={exercises}
           onComplete={handleExerciseComplete}
+          onBack={handleBackFromExercise}
+        />
+      );
+    case 'flashcards':
+      return (
+        <FlashcardView
+          category={selectedCategory}
           onBack={handleBackFromExercise}
         />
       );
@@ -469,7 +506,9 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <AppErrorBoundary>
+        <AppContent />
+      </AppErrorBoundary>
     </ThemeProvider>
   );
 }

@@ -9,42 +9,29 @@ export function ExerciseView({ category, exercises, onComplete, onBack }) {
   const [isCorrect, setIsCorrect] = useState(false);
   const [streak, setStreak] = useState(0);
   const [score, setScore] = useState({ correct: 0, total: 0 });
-  const inputRef = useRef(null);
+  const autoTimerRef = useRef(null);
+  const completeTimerRef = useRef(null);
   const { playCorrect, playError, playComplete, playClick, toggleSound, soundEnabled } = useSound();
-  
+
   const exercise = exercises[currentIndex];
   const progress = ((currentIndex) / exercises.length) * 100;
   const isLast = currentIndex === exercises.length - 1;
-  
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [currentIndex, showResult]);
-  
-  const normalizeText = useCallback((text, { stripAccents, isSentence }) => {
-    let t = text.trim().toLowerCase();
-    if (stripAccents) {
-      t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-    t = t.replace(/\s+/g, ' ');
-    if (isSentence) {
-      t = t.replace(/[.,;:!?¡¿"']+$/g, '');
-    }
-    return t;
+
+  useEffect(() => () => {
+    if (autoTimerRef.current) clearTimeout(autoTimerRef.current);
+    if (completeTimerRef.current) clearTimeout(completeTimerRef.current);
   }, []);
 
-  const handleSubmit = useCallback((e) => {
-    e?.preventDefault();
-    if (showResult || !answer.trim()) return;
+  const clearAutoAdvance = useCallback(() => {
+    if (autoTimerRef.current) {
+      clearTimeout(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+  }, []);
 
-    const strictAccents = category.id === 'acentos';
-    const isSentence = exercise.type === 'correct_sentence';
-    const userAnswer = normalizeText(answer, { stripAccents: !strictAccents, isSentence });
-    const correctAnswer = normalizeText(exercise.answer, { stripAccents: !strictAccents, isSentence });
-    const correct = userAnswer === correctAnswer;
-    
+  const registerResult = useCallback((correct) => {
     setIsCorrect(correct);
     setShowResult(true);
-    
     if (correct) {
       playCorrect();
       setStreak(s => s + 1);
@@ -54,101 +41,59 @@ export function ExerciseView({ category, exercises, onComplete, onBack }) {
       setStreak(0);
       setScore(s => ({ correct: s.correct, total: s.total + 1 }));
     }
-  }, [answer, exercise, category, showResult, normalizeText, playCorrect, playError]);
-  
+  }, [playCorrect, playError]);
+
   const handleNext = useCallback(() => {
+    clearAutoAdvance();
     playClick();
     if (isLast) {
       playComplete();
-      setTimeout(() => onComplete?.({ correct: score.correct, total: score.total, streak }), 500);
+      completeTimerRef.current = setTimeout(() => onComplete?.({ correct: score.correct, total: score.total, streak }), 500);
     } else {
       setCurrentIndex(i => i + 1);
       setAnswer('');
       setShowResult(false);
     }
-  }, [isLast, score, streak, playClick, playComplete, onComplete]);
-  
+  }, [isLast, score, streak, playClick, playComplete, onComplete, clearAutoAdvance]);
+
+  const goNextRef = useRef(handleNext);
+  useEffect(() => { goNextRef.current = handleNext; });
+
+  const scheduleAutoAdvance = useCallback((correct) => {
+    clearAutoAdvance();
+    if (!correct) return;
+    autoTimerRef.current = setTimeout(() => goNextRef.current(), 1200);
+  }, [clearAutoAdvance]);
+
+  const respondWith = useCallback((opt) => {
+    if (showResult) return;
+    setAnswer(opt);
+    const strictAccents = category.id === 'acentos' || category.id === 'textos';
+    const stripAccents = !strictAccents;
+    let userVal = opt.trim().toLowerCase();
+    let expectedVal = exercise.answer.trim().toLowerCase();
+    if (stripAccents) {
+      userVal = userVal.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      expectedVal = expectedVal.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    const correct = userVal === expectedVal;
+    registerResult(correct);
+    scheduleAutoAdvance(correct);
+  }, [showResult, exercise, category, registerResult, scheduleAutoAdvance]);
+
   const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' && !showResult) handleSubmit(e);
-    if (e.key === 'Enter' && showResult) handleNext();
+    if (e.key === 'Enter' && showResult) {
+      e.preventDefault();
+      handleNext();
+    }
     if (e.key === 'Escape') onBack?.();
-  }, [showResult, handleSubmit, handleNext, onBack]);
-  
+  }, [showResult, handleNext, onBack]);
+
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
-  
-  const renderFillBlank = () => (
-    <div className="exercise-fill-blank">
-      <p className="exercise-sentence">
-        {exercise.question.split('___').map((part, i) => (
-          <span key={i}>
-            {part}
-            {i < exercise.question.split('___').length - 1 && (
-              <input
-                ref={inputRef}
-                type="text"
-                className={`exercise-input ${showResult ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
-                value={answer}
-                onChange={e => setAnswer(e.target.value)}
-                disabled={showResult}
-                autoComplete="off"
-                spellCheck="false"
-                placeholder="..."
-                aria-label="Completa la palabra"
-              />
-            )}
-          </span>
-        ))}
-      </p>
-    </div>
-  );
-  
-  const renderMultipleChoice = () => (
-    <div className="exercise-multiple-choice">
-      <p className="exercise-question">{exercise.question}</p>
-      <div className="options-grid">
-        {exercise.options?.map((opt, i) => (
-          <button
-            key={i}
-            className={`option-btn ${showResult ? (
-              opt === exercise.answer ? 'correct' : opt === answer ? 'incorrect' : ''
-            ) : ''}`}
-            onClick={() => !showResult && setAnswer(opt)}
-            disabled={showResult}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-  
-  const renderCorrectSentence = () => (
-    <div className="exercise-correct-sentence">
-      <p className="exercise-question">{exercise.question}</p>
-      <textarea
-        ref={inputRef}
-        className={`exercise-textarea ${showResult ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
-        value={answer}
-        onChange={e => setAnswer(e.target.value)}
-        disabled={showResult}
-        placeholder="Escribe la frase corregida..."
-        rows={3}
-        spellCheck="false"
-      />
-    </div>
-  );
-  
-  const renderExercise = () => {
-    switch (exercise.type) {
-      case 'multiple_choice': return renderMultipleChoice();
-      case 'correct_sentence': return renderCorrectSentence();
-      default: return renderFillBlank();
-    }
-  };
-  
+
   return (
     <div className="exercise-view">
       <header className="exercise-header">
@@ -161,18 +106,39 @@ export function ExerciseView({ category, exercises, onComplete, onBack }) {
           </div>
           <span className="progress-text">{currentIndex + 1} / {exercises.length}</span>
         </div>
+        <div className="header-stats" aria-label="Progreso de la sesión">
+          <span className="stat-chip"><b>{score.correct}</b> aciertos</span>
+          <span className={`stat-chip ${streak >= 3 ? 'hot' : ''}`}><b>{streak}</b> racha</span>
+        </div>
         <button className={`btn btn-ghost btn-sm ${soundEnabled ? '' : 'muted'}`} onClick={toggleSound}>
           {soundEnabled ? <VolumeIcon /> : <VolumeXIcon />}
         </button>
       </header>
-      
+
       <main className="exercise-main">
-        <div className="exercise-card">
+        <div className={`exercise-card ${showResult && isCorrect ? 'flash-correct' : ''}`}>
           <div className="exercise-category-badge">{category.name}</div>
-          {renderExercise()}
-          
+
+          <div className="exercise-multiple-choice">
+            <p className="exercise-question">{exercise.question}</p>
+            <div className="options-grid">
+              {exercise.options?.map((opt, i) => (
+                <button
+                  key={i}
+                  className={`option-btn ${showResult ? (
+                    opt === exercise.answer ? 'correct' : opt === answer ? 'incorrect' : ''
+                  ) : ''} ${showResult && isCorrect ? 'auto-advancing' : ''}`}
+                  onClick={() => respondWith(opt)}
+                  disabled={showResult}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {showResult && (
-            <div className="exercise-result">
+            <div className={`exercise-result ${showResult && isCorrect && !isLast ? 'auto-advancing' : ''}`} role="status" aria-live="polite">
               <div className={`result-icon ${isCorrect ? 'success' : 'error'}`}>
                 {isCorrect ? <CheckIcon /> : <XIcon />}
               </div>
@@ -187,36 +153,23 @@ export function ExerciseView({ category, exercises, onComplete, onBack }) {
               {exercise.explanation && (
                 <p className="explanation">{exercise.explanation}</p>
               )}
+              {isCorrect && !isLast && <div className="auto-advance-bar" aria-hidden="true" />}
             </div>
           )}
         </div>
-        
-        <div className="exercise-stats">
-          <div className="stat-item">
-            <span className="stat-value">{score.correct}</span>
-            <span className="stat-label">Aciertos</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-value">{streak}</span>
-            <span className="stat-label">Racha</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-value">{exercises.length - currentIndex - 1}</span>
-            <span className="stat-label">Restantes</span>
-          </div>
-        </div>
       </main>
-      
-      <footer className="exercise-footer">
-        <button 
-          className={`btn btn-primary btn-lg ${!showResult && !answer.trim() ? 'disabled' : ''}`}
-          onClick={showResult ? handleNext : handleSubmit}
-          disabled={!showResult && !answer.trim()}
-        >
-          {showResult ? (isLast ? 'Ver resultados' : 'Siguiente') : 'Comprobar'}
-          <ChevronRightIcon />
-        </button>
-      </footer>
+
+      {showResult && !isCorrect && (
+        <footer className="exercise-footer">
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={handleNext}
+          >
+            {isLast ? 'Ver resultados' : 'Siguiente'}
+            <ChevronRightIcon />
+          </button>
+        </footer>
+      )}
     </div>
   );
 }

@@ -1,34 +1,68 @@
 import { useCallback, useRef, useEffect, useState } from 'react';
 
-const AUDIO_CONTEXT = typeof window !== 'undefined' ? new (window.AudioContext || window.webkitAudioContext)() : null;
+let audioCtx = null;
+
+function getAudioContext() {
+  if (audioCtx) return audioCtx;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    audioCtx = new AC();
+  } catch {
+    audioCtx = null;
+  }
+  return audioCtx;
+}
+
+function safeGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage deshabilitado */
+  }
+}
 
 function playTone(frequency, duration, type = 'sine', volume = 0.3) {
-  if (!AUDIO_CONTEXT) return;
-  
-  const oscillator = AUDIO_CONTEXT.createOscillator();
-  const gainNode = AUDIO_CONTEXT.createGain();
-  
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const oscillator = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+
   oscillator.connect(gainNode);
-  gainNode.connect(AUDIO_CONTEXT.destination);
-  
+  gainNode.connect(ctx.destination);
+
   oscillator.frequency.value = frequency;
   oscillator.type = type;
-  
-  gainNode.gain.setValueAtTime(volume, AUDIO_CONTEXT.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.01, AUDIO_CONTEXT.currentTime + duration);
-  
-  oscillator.start(AUDIO_CONTEXT.currentTime);
-  oscillator.stop(AUDIO_CONTEXT.currentTime + duration);
+
+  gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+
+  oscillator.start(ctx.currentTime);
+  oscillator.stop(ctx.currentTime + duration);
 }
 
 export function useSound() {
-  const [enabled, setEnabled] = useState(true);
-  const enabledRef = useRef(true);
-  
+  const [enabled, setEnabled] = useState(() => safeGet('sound') !== 'off');
+  const enabledRef = useRef(enabled);
+
+  useEffect(() => {
+    enabledRef.current = enabled;
+  }, [enabled]);
+
   useEffect(() => {
     const handleClick = () => {
-      if (AUDIO_CONTEXT && AUDIO_CONTEXT.state === 'suspended') {
-        AUDIO_CONTEXT.resume();
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
       }
     };
     document.addEventListener('click', handleClick, { once: true });
@@ -64,6 +98,7 @@ export function useSound() {
   const toggleSound = useCallback(() => {
     enabledRef.current = !enabledRef.current;
     setEnabled(enabledRef.current);
+    safeSet('sound', enabledRef.current ? 'on' : 'off');
     return enabledRef.current;
   }, []);
   

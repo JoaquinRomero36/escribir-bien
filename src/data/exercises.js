@@ -1,3 +1,5 @@
+import { lote2Exercises, getSmartOptions } from './exercises2';
+
 export const CATEGORIES = [
   {
     id: 'general',
@@ -5,7 +7,7 @@ export const CATEGORIES = [
     description: 'Mezcla de todos los tipos de errores',
     icon: 'ShuffleIcon',
     color: '#aff33e',
-    totalExercises: 0,
+    
   },
   {
     id: 'h',
@@ -13,7 +15,7 @@ export const CATEGORIES = [
     description: 'Palabras con H muda',
     icon: 'LetterHIcon',
     color: '#3b82f6',
-    totalExercises: 0,
+    
   },
   {
     id: 'bv',
@@ -21,7 +23,7 @@ export const CATEGORIES = [
     description: 'Diferencia entre B y V',
     icon: 'LetterBIcon',
     color: '#ef4444',
-    totalExercises: 0,
+    
   },
   {
     id: 'yll',
@@ -29,7 +31,7 @@ export const CATEGORIES = [
     description: 'Cuándo usar Y y cuándo LL',
     icon: 'LetterYIcon',
     color: '#f59e0b',
-    totalExercises: 0,
+    
   },
   {
     id: 'chx',
@@ -37,7 +39,7 @@ export const CATEGORIES = [
     description: 'Palabras con CH y con X',
     icon: 'LetterCHIcon',
     color: '#8b5cf6',
-    totalExercises: 0,
+    
   },
   {
     id: 'cis',
@@ -45,7 +47,7 @@ export const CATEGORIES = [
     description: 'Suena /s/: ¿se escribe CI o SI?',
     icon: 'LetterCIcon',
     color: '#ec4899',
-    totalExercises: 0,
+    
   },
   {
     id: 'ces',
@@ -53,7 +55,7 @@ export const CATEGORIES = [
     description: 'Suena /s/: ¿se escribe CE o SE?',
     icon: 'LetterEIcon',
     color: '#06b6d4',
-    totalExercises: 0,
+    
   },
   {
     id: 'sz',
@@ -61,7 +63,7 @@ export const CATEGORIES = [
     description: 'Sonido /s/: ¿se escribe S o Z?',
     icon: 'LetterSIcon',
     color: '#84cc16',
-    totalExercises: 0,
+    
   },
   {
     id: 'acentos',
@@ -69,7 +71,7 @@ export const CATEGORIES = [
     description: 'Reglas de acentuación (aquí las tildes cuentan)',
     icon: 'AccentIcon',
     color: '#f97316',
-    totalExercises: 0,
+    
   },
   {
     id: 'ambiguas',
@@ -77,145 +79,201 @@ export const CATEGORIES = [
     description: 'Yendo/llendo, a ver/haber, hay/ahy',
     icon: 'QuestionIcon',
     color: '#6366f1',
-    totalExercises: 0,
+    
+  },
+  {
+    id: 'textos',
+    name: 'Revisión',
+    description: 'Textos con errores para corregir de punta a punta',
+    icon: 'PenIcon',
+    color: '#14b8a6',
+    
   },
 ];
 
-export const EXERCISE_TYPES = {
-  FILL_BLANK: 'fill_blank',
-  MULTIPLE_CHOICE: 'multiple_choice',
-  CORRECT_SENTENCE: 'correct_sentence',
-};
+/* ==================== PROCESAMIENTO: TODO → MULTIPLE_CHOICE ====================
+   Las opciones se generan con getSmartOptions(): SIEMPRE la palabra correcta + malas
+   escrituras de ESA misma palabra según la categoría. Nunca otra palabra. */
 
-function createExercise(id, category, type, question, answer, options = null, explanation = '') {
-  return { id, category, type, question, answer, options, explanation };
+function processCategory(exercises) {
+  return exercises.flatMap(ex => {
+    if (ex.type === 'multiple_choice') {
+      if (!ex.options || ex.options.length < 3) {
+        return [{ ...ex, options: getSmartOptions(ex.answer, ex.category) }];
+      }
+      return [ex];
+    }
+
+    if (ex.type === 'fill_blank') {
+      return [{
+        ...ex,
+        type: 'multiple_choice',
+        options: getSmartOptions(ex.answer, ex.category),
+      }];
+    }
+
+    if (ex.type === 'correct_sentence') {
+      const wrong = ex.question.replace(/^Corrige:\s*"?/, '').replace(/"?\s*$/, '');
+      const wrongTokens = wrong.split(/\s+/);
+      const correctTokens = ex.answer.split(/\s+/);
+
+      const errors = [];
+      for (let i = 0; i < Math.min(wrongTokens.length, correctTokens.length); i++) {
+        if (wrongTokens[i] === correctTokens[i]) continue;
+        if (i === 0 && wrongTokens[i].toLowerCase() === correctTokens[i].toLowerCase()) continue;
+        errors.push({ idx: i, wrong: wrongTokens[i], correct: correctTokens[i] });
+      }
+
+      if (errors.length === 0) {
+        return [{ ...ex, type: 'multiple_choice', options: getSmartOptions(ex.answer, ex.category) }];
+      }
+
+      return errors.map(err => {
+        const qTokens = [...wrongTokens];
+        qTokens[err.idx] = '___';
+        return {
+          id: `${ex.id}_w${err.idx}`,
+          category: ex.category,
+          type: 'multiple_choice',
+          question: qTokens.join(' '),
+          answer: err.correct,
+          options: getSmartOptions(err.correct, ex.category, err.wrong),
+          explanation: ex.explanation,
+        };
+      });
+    }
+
+    return [ex];
+  });
 }
 
+/* ==================== EJERCICIOS POR CATEGORÍA ==================== */
+
 /* ==================== LA H ==================== */
-const hExercises = [
-  createExercise('h1', 'h', EXERCISE_TYPES.FILL_BLANK, 'Tengo que ___ la tarea de español.', 'hacer', null, 'Infinitivo del verbo: hacer. La H es muda.'),
-  createExercise('h2', 'h', EXERCISE_TYPES.FILL_BLANK, 'Aprendí a ___ guitarra el año pasado.', 'hablar', null, 'Verbo hablar: la H inicial no suena.'),
-  createExercise('h3', 'h', EXERCISE_TYPES.FILL_BLANK, 'Mi ___ menor cumple años mañana.', 'hermano', null, 'Palabras con HI- inicial llevan H: hermano, hielo, hierba.'),
-  createExercise('h4', 'h', EXERCISE_TYPES.FILL_BLANK, '___ vamos al cine juntos.', 'hoy', null, '"Hoy" es adverbio de tiempo y lleva H. "Oy" no existe.'),
-  createExercise('h5', 'h', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el saludo?', 'hola', ['ola', 'hola'], 'El saludo es "hola", con H inicial.'),
-  createExercise('h6', 'h', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el alimento?', 'huevo', ['uevo', 'huevo'], 'Alimento del desayuno: "huevo", con H.'),
-  createExercise('h7', 'h', EXERCISE_TYPES.FILL_BLANK, 'Está ___ fumar dentro del edificio.', 'prohibido', null, 'Del verbo prohibir. H intercalada en -hibir/-ibir: prohibir, exhalar.'),
-  createExercise('h8', 'h', EXERCISE_TYPES.FILL_BLANK, 'No puedo salir ___, tengo que terminar esto.', 'ahora', null, '"Ahora" lleva H intercalada: a + hora.'),
-  createExercise('h9', 'h', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "oy voy a ir a la playa"', 'Hoy voy a ir a la playa', null, '"Hoy" (adverbio de tiempo) lleva H; "oy" no existe.'),
-  createExercise('h10', 'h', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "el hombre abla mucho"', 'El hombre habla mucho', null, '"Habla" viene del verbo hablar, con H.'),
-];
+const hExercises = processCategory([
+  { id: 'h1', category: 'h', type: 'fill_blank', question: 'Tengo que ___ la tarea de español.', answer: 'hacer', options: null, explanation: 'Infinitivo del verbo: hacer. La H es muda.' },
+  { id: 'h2', category: 'h', type: 'fill_blank', question: 'Aprendí a ___ guitarra el año pasado.', answer: 'hablar', options: null, explanation: 'Verbo hablar: la H inicial no suena.' },
+  { id: 'h3', category: 'h', type: 'fill_blank', question: 'Mi ___ menor cumple años mañana.', answer: 'hermano', options: null, explanation: 'Palabras con HI- inicial llevan H: hermano, hielo, hierba.' },
+  { id: 'h4', category: 'h', type: 'fill_blank', question: '___ vamos al cine juntos.', answer: 'hoy', options: null, explanation: '"Hoy" es adverbio de tiempo y lleva H. "Oy" no existe.' },
+  { id: 'h5', category: 'h', type: 'multiple_choice', question: '¿Cómo se escribe el saludo?', answer: 'hola', options: ['ola', 'hola'], explanation: 'El saludo es "hola", con H inicial.' },
+  { id: 'h6', category: 'h', type: 'multiple_choice', question: '¿Cómo se escribe el alimento?', answer: 'huevo', options: ['uevo', 'huevo'], explanation: 'Alimento del desayuno: "huevo", con H.' },
+  { id: 'h7', category: 'h', type: 'fill_blank', question: 'Está ___ fumar dentro del edificio.', answer: 'prohibido', options: null, explanation: 'Del verbo prohibir. H intercalada en -hibir/-ibir: prohibir, exhalar.' },
+  { id: 'h8', category: 'h', type: 'fill_blank', question: 'No puedo salir ___, tengo que terminar esto.', answer: 'ahora', options: null, explanation: '"Ahora" lleva H intercalada: a + hora.' },
+  { id: 'h9', category: 'h', type: 'correct_sentence', question: 'Corrige: "oy voy a ir a la playa"', answer: 'Hoy voy a ir a la playa', options: null, explanation: '"Hoy" (adverbio de tiempo) lleva H; "oy" no existe.' },
+  { id: 'h10', category: 'h', type: 'correct_sentence', question: 'Corrige: "el hombre abla mucho"', answer: 'El hombre habla mucho', options: null, explanation: '"Habla" viene del verbo hablar, con H.' },
+]);
 
 /* ==================== B / V ==================== */
-const bvExercises = [
-  createExercise('bv1', 'bv', EXERCISE_TYPES.FILL_BLANK, 'La ___ da leche todas las mañanas.', 'vaca', null, 'Animal doméstico: vaca, con V.'),
-  createExercise('bv2', 'bv', EXERCISE_TYPES.FILL_BLANK, 'En ___ hace mucho calor.', 'verano', null, 'Estación del año: verano, con V.'),
-  createExercise('bv3', 'bv', EXERCISE_TYPES.FILL_BLANK, 'Es importante ___ estudiado para el examen.', 'haber', null, 'Verbo auxiliar: haber. Se escribe con B.'),
-  createExercise('bv4', 'bv', EXERCISE_TYPES.FILL_BLANK, 'Voy a ___ la tarea ahora mismo.', 'hacer', null, 'Verbo hacer: con H y sin V.'),
-  createExercise('bv5', 'bv', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el verbo de residir?', 'vivir', ['bivir', 'vivir'], 'Verbo vivir: siempre con V.'),
-  createExercise('bv6', 'bv', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el verbo de tomar líquido?', 'beber', ['vever', 'beber'], 'Verbo beber: con B.'),
-  createExercise('bv7', 'bv', EXERCISE_TYPES.FILL_BLANK, 'El pozo fue ___ por los trabajadores.', 'cavado', null, 'Participio de cavar: cavado, con V.'),
-  createExercise('bv8', 'bv', EXERCISE_TYPES.FILL_BLANK, 'El bebé se limpió la ___ con el pañuelo.', 'baba', null, 'Sustantivo: baba, con B.'),
-  createExercise('bv9', 'bv', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "voy a bivir a Madrid"', 'Voy a vivir a Madrid', null, '"Vivir" se escribe siempre con V.'),
-  createExercise('bv10', 'bv', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "la baca come pasto"', 'La vaca come pasto', null, 'El animal es la vaca, con V.'),
-];
+const bvExercises = processCategory([
+  { id: 'bv1', category: 'bv', type: 'fill_blank', question: 'La ___ da leche todas las mañanas.', answer: 'vaca', options: null, explanation: 'Animal doméstico: vaca, con V.' },
+  { id: 'bv2', category: 'bv', type: 'fill_blank', question: 'En ___ hace mucho calor.', answer: 'verano', options: null, explanation: 'Estación del año: verano, con V.' },
+  { id: 'bv3', category: 'bv', type: 'fill_blank', question: 'Es importante ___ estudiado para el examen.', answer: 'haber', options: null, explanation: 'Verbo auxiliar: haber. Se escribe con B.' },
+  { id: 'bv4', category: 'bv', type: 'fill_blank', question: 'Voy a ___ la tarea ahora mismo.', answer: 'hacer', options: null, explanation: 'Verbo hacer: con H y sin V.' },
+  { id: 'bv5', category: 'bv', type: 'multiple_choice', question: '¿Cómo se escribe el verbo de residir?', answer: 'vivir', options: ['bivir', 'vivir'], explanation: 'Verbo vivir: siempre con V.' },
+  { id: 'bv6', category: 'bv', type: 'multiple_choice', question: '¿Cómo se escribe el verbo de tomar líquido?', answer: 'beber', options: ['vever', 'beber'], explanation: 'Verbo beber: con B.' },
+  { id: 'bv7', category: 'bv', type: 'fill_blank', question: 'El pozo fue ___ por los trabajadores.', answer: 'cavado', options: null, explanation: 'Participio de cavar: cavado, con V.' },
+  { id: 'bv8', category: 'bv', type: 'fill_blank', question: 'El bebé se limpió la ___ con el pañuelo.', answer: 'baba', options: null, explanation: 'Sustantivo: baba, con B.' },
+  { id: 'bv9', category: 'bv', type: 'correct_sentence', question: 'Corrige: "voy a bivir a Madrid"', answer: 'Voy a vivir a Madrid', options: null, explanation: '"Vivir" se escribe siempre con V.' },
+  { id: 'bv10', category: 'bv', type: 'correct_sentence', question: 'Corrige: "la baca come pasto"', answer: 'La vaca come pasto', options: null, explanation: 'El animal es la vaca, con V.' },
+]);
 
 /* ==================== Y / LL ==================== */
-const yllExercises = [
-  createExercise('yll1', 'yll', EXERCISE_TYPES.FILL_BLANK, 'Abrí la puerta con la ___.', 'llave', null, 'Objeto que abre candados: llave, con LL.'),
-  createExercise('yll2', 'yll', EXERCISE_TYPES.FILL_BLANK, 'El ___ galopa por el campo.', 'caballo', null, 'Animal: caballo, con LL.'),
-  createExercise('yll3', 'yll', EXERCISE_TYPES.FILL_BLANK, '___ nunca llego tarde.', 'yo', null, 'Pronombre personal: yo, con Y.'),
-  createExercise('yll4', 'yll', EXERCISE_TYPES.FILL_BLANK, 'El tren ___ llegó a la estación.', 'ya', null, 'Adverbio de tiempo: ya, con Y.'),
-  createExercise('yll5', 'yll', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el agua que cae del cielo?', 'lluvia', ['yuvia', 'lluvia'], 'Fenómeno meteorológico: lluvia, con LL.'),
-  createExercise('yll6', 'yll', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe la descarga eléctrica de la tormenta?', 'rayo', ['ralio', 'rayo'], 'Fenómeno de la tormenta: rayo, con Y.'),
-  createExercise('yll7', 'yll', EXERCISE_TYPES.FILL_BLANK, 'Perdí las llaves y no las puedo ___.', 'hallar', null, 'Verbo hallar (encontrar): con LL. Ojo: hallar ≠ haber.'),
-  createExercise('yll8', 'yll', EXERCISE_TYPES.FILL_BLANK, 'El avión va a ___ a las nueve.', 'llegar', null, 'Verbo llegar: con LL.'),
-  createExercise('yll9', 'yll', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "ella yega tarde"', 'Ella llega tarde', null, 'Verbo llegar: llega, con LL.'),
-  createExercise('yll10', 'yll', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "yo me yamo Ana"', 'Yo me llamo Ana', null, 'Del verbo llamarse: me llamo, con LL. "Yamo" no existe.'),
-];
+const yllExercises = processCategory([
+  { id: 'yll1', category: 'yll', type: 'fill_blank', question: 'Abrí la puerta con la ___.', answer: 'llave', options: null, explanation: 'Objeto que abre candados: llave, con LL.' },
+  { id: 'yll2', category: 'yll', type: 'fill_blank', question: 'El ___ galopa por el campo.', answer: 'caballo', options: null, explanation: 'Animal: caballo, con LL.' },
+  { id: 'yll3', category: 'yll', type: 'fill_blank', question: '___ nunca llego tarde.', answer: 'yo', options: null, explanation: 'Pronombre personal: yo, con Y.' },
+  { id: 'yll4', category: 'yll', type: 'fill_blank', question: 'El tren ___ llegó a la estación.', answer: 'ya', options: null, explanation: 'Adverbio de tiempo: ya, con Y.' },
+  { id: 'yll5', category: 'yll', type: 'multiple_choice', question: '¿Cómo se escribe el agua que cae del cielo?', answer: 'lluvia', options: ['yuvia', 'lluvia'], explanation: 'Fenómeno meteorológico: lluvia, con LL.' },
+  { id: 'yll6', category: 'yll', type: 'multiple_choice', question: '¿Cómo se escribe la descarga eléctrica de la tormenta?', answer: 'rayo', options: ['ralio', 'rayo'], explanation: 'Fenómeno de la tormenta: rayo, con Y.' },
+  { id: 'yll7', category: 'yll', type: 'fill_blank', question: 'Perdí las llaves y no las puedo ___.', answer: 'hallar', options: null, explanation: 'Verbo hallar (encontrar): con LL. Ojo: hallar ≠ haber.' },
+  { id: 'yll8', category: 'yll', type: 'fill_blank', question: 'El avión va a ___ a las nueve.', answer: 'llegar', options: null, explanation: 'Verbo llegar: con LL.' },
+  { id: 'yll9', category: 'yll', type: 'correct_sentence', question: 'Corrige: "ella yega tarde"', answer: 'Ella llega tarde', options: null, explanation: 'Verbo llegar: llega, con LL.' },
+  { id: 'yll10', category: 'yll', type: 'correct_sentence', question: 'Corrige: "yo me yamo Ana"', answer: 'Yo me llamo Ana', options: null, explanation: 'Del verbo llamarse: me llamo, con LL. "Yamo" no existe.' },
+]);
 
 /* ==================== CH / X ==================== */
-const chxExercises = [
-  createExercise('chx1', 'chx', EXERCISE_TYPES.FILL_BLANK, 'Se lavó el pelo con ___ de coco.', 'champú', null, 'Préstamo adaptado con CH: champú (nunca "shampú").'),
-  createExercise('chx2', 'chx', EXERCISE_TYPES.FILL_BLANK, 'En invierno tomo ___ caliente.', 'chocolate', null, 'Dulce: chocolate, con CH.'),
-  createExercise('chx3', 'chx', EXERCISE_TYPES.FILL_BLANK, 'Mi primo estudia en la universidad de ___.', 'México', null, 'País: México, con X. Suena como /j/ o /s/.'),
-  createExercise('chx4', 'chx', EXERCISE_TYPES.FILL_BLANK, 'Mañana tengo un ___ de matemáticas.', 'examen', null, 'Prueba académica: examen, con X (/ks/).'),
-  createExercise('chx5', 'chx', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el dulce hecho con cacao?', 'chocolate', ['shocolate', 'chocolate'], 'Con CH: chocolate. La SH no existe en español.'),
-  createExercise('chx6', 'chx', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe el adjetivo de muy bueno?', 'excelente', ['escelente', 'excelente'], 'Con X: excelente.'),
-  createExercise('chx7', 'chx', EXERCISE_TYPES.FILL_BLANK, 'Compré un ___ nuevo para la boda.', 'traje', null, 'Prenda: traje. Suena /j/ pero se escribe con J, no con X.'),
-  createExercise('chx8', 'chx', EXERCISE_TYPES.FILL_BLANK, 'El ___ es un deporte con guantes.', 'boxeo', null, 'Deporte de combate con guantes: boxeo, con X.'),
-  createExercise('chx9', 'chx', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "el axidente fue grave"', 'El accidente fue grave', null, '"Accidente" lleva CC: accion, accidente.'),
-  createExercise('chx10', 'chx', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "el exito es tuyo"', 'El éxito es tuyo', null, '"Éxito" se escribe con X y lleva tilde (esdrújula).'),
-];
+const chxExercises = processCategory([
+  { id: 'chx1', category: 'chx', type: 'fill_blank', question: 'Se lavó el pelo con ___ de coco.', answer: 'champú', options: null, explanation: 'Préstamo adaptado con CH: champú (nunca "shampú").' },
+  { id: 'chx2', category: 'chx', type: 'fill_blank', question: 'En invierno tomo ___ caliente.', answer: 'chocolate', options: null, explanation: 'Dulce: chocolate, con CH.' },
+  { id: 'chx3', category: 'chx', type: 'fill_blank', question: 'Mi primo estudia en la universidad de ___.', answer: 'México', options: null, explanation: 'País: México, con X. Suena como /j/ o /s/.' },
+  { id: 'chx4', category: 'chx', type: 'fill_blank', question: 'Mañana tengo un ___ de matemáticas.', answer: 'examen', options: null, explanation: 'Prueba académica: examen, con X (/ks/).' },
+  { id: 'chx5', category: 'chx', type: 'multiple_choice', question: '¿Cómo se escribe el dulce hecho con cacao?', answer: 'chocolate', options: ['shocolate', 'chocolate'], explanation: 'Con CH: chocolate. La SH no existe en español.' },
+  { id: 'chx6', category: 'chx', type: 'multiple_choice', question: '¿Cómo se escribe el adjetivo de muy bueno?', answer: 'excelente', options: ['escelente', 'excelente'], explanation: 'Con X: excelente.' },
+  { id: 'chx7', category: 'chx', type: 'fill_blank', question: 'Compré un ___ nuevo para la boda.', answer: 'traje', options: null, explanation: 'Prenda: traje. Suena /j/ pero se escribe con J, no con X.' },
+  { id: 'chx8', category: 'chx', type: 'fill_blank', question: 'El ___ es un deporte con guantes.', answer: 'boxeo', options: null, explanation: 'Deporte de combate con guantes: boxeo, con X.' },
+  { id: 'chx9', category: 'chx', type: 'correct_sentence', question: 'Corrige: "el axidente fue grave"', answer: 'El accidente fue grave', options: null, explanation: '"Accidente" lleva CC: accion, accidente.' },
+  { id: 'chx10', category: 'chx', type: 'correct_sentence', question: 'Corrige: "el exito es tuyo"', answer: 'El éxito es tuyo', options: null, explanation: '"Éxito" se escribe con X y lleva tilde (esdrújula).' },
+]);
 
 /* ==================== CI / SI ==================== */
-const cisExercises = [
-  createExercise('cis1', 'cis', EXERCISE_TYPES.FILL_BLANK, 'Este ejercicio es muy ___ de resolver.', 'fácil', null, 'Adjetivo: fácil, con C antes de I.'),
-  createExercise('cis2', 'cis', EXERCISE_TYPES.FILL_BLANK, 'Muchas ___ por tu ayuda.', 'gracias', null, 'Expresión de cortesía: gracias, con CI.'),
-  createExercise('cis3', 'cis', EXERCISE_TYPES.FILL_BLANK, 'La ___ estudia los planetas.', 'ciencia', null, 'Sustantivo: ciencia, con CI.'),
-  createExercise('cis4', 'cis', EXERCISE_TYPES.FILL_BLANK, 'Necesito una ___ nueva para la mesa.', 'silla', null, 'Mueble: silla, con SI. Suena igual que "siya"... pero se escribe con SI.'),
-  createExercise('cis5', 'cis', EXERCISE_TYPES.MULTIPLE_CHOICE, 'Tengo ___ pesos en la cartera. ¿Cómo se escribe el número?', 'cien', ['sien', 'cien'], 'Número: cien, con C. "Sien" es la parte de la cabeza.'),
-  createExercise('cis6', 'cis', EXERCISE_TYPES.MULTIPLE_CHOICE, '¿Cómo se escribe la fruta de hueso?', 'ciruela', ['siruela', 'ciruela'], 'Fruta: ciruela, con CI.'),
-  createExercise('cis7', 'cis', EXERCISE_TYPES.FILL_BLANK, 'El ___ de la renta subió este año.', 'precio', null, 'Valor monetario: precio, con CI.'),
-  createExercise('cis8', 'cis', EXERCISE_TYPES.FILL_BLANK, 'El juez resolvió el caso con buen ___.', 'juicio', null, 'Sustantivo: juicio, con CI.'),
-  createExercise('cis9', 'cis', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "tengo sinco pesos"', 'Tengo cinco pesos', null, 'Número: cinco, con C.'),
-  createExercise('cis10', 'cis', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "la sencia es importante"', 'La ciencia es importante', null, 'Sustantivo: ciencia, con CI.'),
-];
+const cisExercises = processCategory([
+  { id: 'cis1', category: 'cis', type: 'fill_blank', question: 'Este ejercicio es muy ___ de resolver.', answer: 'fácil', options: null, explanation: 'Adjetivo: fácil, con C antes de I.' },
+  { id: 'cis2', category: 'cis', type: 'fill_blank', question: 'Muchas ___ por tu ayuda.', answer: 'gracias', options: null, explanation: 'Expresión de cortesía: gracias, con CI.' },
+  { id: 'cis3', category: 'cis', type: 'fill_blank', question: 'La ___ estudia los planetas.', answer: 'ciencia', options: null, explanation: 'Sustantivo: ciencia, con CI.' },
+  { id: 'cis4', category: 'cis', type: 'fill_blank', question: 'Necesito una ___ nueva para la mesa.', answer: 'silla', options: null, explanation: 'Mueble: silla, con SI. Suena igual que "siya"... pero se escribe con SI.' },
+  { id: 'cis5', category: 'cis', type: 'multiple_choice', question: 'Tengo ___ pesos en la cartera. ¿Cómo se escribe el número?', answer: 'cien', options: ['sien', 'cien'], explanation: 'Número: cien, con C. "Sien" es la parte de la cabeza.' },
+  { id: 'cis6', category: 'cis', type: 'multiple_choice', question: '¿Cómo se escribe la fruta de hueso?', answer: 'ciruela', options: ['siruela', 'ciruela'], explanation: 'Fruta: ciruela, con CI.' },
+  { id: 'cis7', category: 'cis', type: 'fill_blank', question: 'El ___ de la renta subió este año.', answer: 'precio', options: null, explanation: 'Valor monetario: precio, con CI.' },
+  { id: 'cis8', category: 'cis', type: 'fill_blank', question: 'El juez resolvió el caso con buen ___.', answer: 'juicio', options: null, explanation: 'Sustantivo: juicio, con CI.' },
+  { id: 'cis9', category: 'cis', type: 'correct_sentence', question: 'Corrige: "tengo sinco pesos"', answer: 'Tengo cinco pesos', options: null, explanation: 'Número: cinco, con C.' },
+  { id: 'cis10', category: 'cis', type: 'correct_sentence', question: 'Corrige: "la sencia es importante"', answer: 'La ciencia es importante', options: null, explanation: 'Sustantivo: ciencia, con CI.' },
+]);
 
 /* ==================== CE / SE ==================== */
-const cesExercises = [
-  createExercise('ces1', 'ces', EXERCISE_TYPES.FILL_BLANK, 'Esta receta es muy ___ de preparar.', 'sencilla', null, 'Adjetivo: sencilla, con CE inicial.'),
-  createExercise('ces2', 'ces', EXERCISE_TYPES.FILL_BLANK, 'Con esfuerzo vas a ___ tus metas.', 'vencer', null, 'Verbo vencer: con CE.'),
-  createExercise('ces3', 'ces', EXERCISE_TYPES.FILL_BLANK, 'Las plantas ___ rápido con agua y sol.', 'crecen', null, 'Verbo crecer (ellos): crecen, con CE.'),
-  createExercise('ces4', 'ces', EXERCISE_TYPES.FILL_BLANK, 'Me encanta ___ gente nueva.', 'conocer', null, 'Verbo conocer: con CE.'),
-  createExercise('ces5', 'ces', EXERCISE_TYPES.MULTIPLE_CHOICE, 'La familia se reúne a la hora de la ___. ¿Cómo se escribe?', 'cena', ['sena', 'cena'], 'Última comida del día: cena, con CE.'),
-  createExercise('ces6', 'ces', EXERCISE_TYPES.MULTIPLE_CHOICE, 'La temperatura bajó a ___ grados. ¿Cómo se escribe el número?', 'cero', ['sero', 'cero'], 'Número: cero, con CE.'),
-  createExercise('ces7', 'ces', EXERCISE_TYPES.FILL_BLANK, 'Hoy voy a ___ la cena en casa.', 'hacer', null, 'Verbo hacer: suena /s/ pero se escribe con H + C.'),
-  createExercise('ces8', 'ces', EXERCISE_TYPES.FILL_BLANK, 'La abuela ___ al bebé en la silla mecánica.', 'mece', null, 'Verbo mecer (él/ella): mece, con CE.'),
-  createExercise('ces9', 'ces', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "voy a senar temprano"', 'Voy a cenar temprano', null, 'Verbo cenar: con CE. "Senar" no existe.'),
-  createExercise('ces10', 'ces', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "el sielo es azul"', 'El cielo es azul', null, 'Sustantivo: cielo, con CE.'),
-];
+const cesExercises = processCategory([
+  { id: 'ces1', category: 'ces', type: 'fill_blank', question: 'Esta receta es muy ___ de preparar.', answer: 'sencilla', options: null, explanation: 'Adjetivo: sencilla, con CE inicial.' },
+  { id: 'ces2', category: 'ces', type: 'fill_blank', question: 'Con esfuerzo vas a ___ tus metas.', answer: 'vencer', options: null, explanation: 'Verbo vencer: con CE.' },
+  { id: 'ces3', category: 'ces', type: 'fill_blank', question: 'Las plantas ___ rápido con agua y sol.', answer: 'crecen', options: null, explanation: 'Verbo crecer (ellos): crecen, con CE.' },
+  { id: 'ces4', category: 'ces', type: 'fill_blank', question: 'Me encanta ___ gente nueva.', answer: 'conocer', options: null, explanation: 'Verbo conocer: con CE.' },
+  { id: 'ces5', category: 'ces', type: 'multiple_choice', question: 'La familia se reúne a la hora de la ___. ¿Cómo se escribe?', answer: 'cena', options: ['sena', 'cena'], explanation: 'Última comida del día: cena, con CE.' },
+  { id: 'ces6', category: 'ces', type: 'multiple_choice', question: 'La temperatura bajó a ___ grados. ¿Cómo se escribe el número?', answer: 'cero', options: ['sero', 'cero'], explanation: 'Número: cero, con CE.' },
+  { id: 'ces7', category: 'ces', type: 'fill_blank', question: 'Hoy voy a ___ la cena en casa.', answer: 'hacer', options: null, explanation: 'Verbo hacer: suena /s/ pero se escribe con H + C.' },
+  { id: 'ces8', category: 'ces', type: 'fill_blank', question: 'La abuela ___ al bebé en la silla mecánica.', answer: 'mece', options: null, explanation: 'Verbo mecer (él/ella): mece, con CE.' },
+  { id: 'ces9', category: 'ces', type: 'correct_sentence', question: 'Corrige: "voy a senar temprano"', answer: 'Voy a cenar temprano', options: null, explanation: 'Verbo cenar: con CE. "Senar" no existe.' },
+  { id: 'ces10', category: 'ces', type: 'correct_sentence', question: 'Corrige: "el sielo es azul"', answer: 'El cielo es azul', options: null, explanation: 'Sustantivo: cielo, con CE.' },
+]);
 
 /* ==================== S / Z ==================== */
-const szExercises = [
-  createExercise('sz1', 'sz', EXERCISE_TYPES.FILL_BLANK, 'Mi ___ tiene un jardín grande.', 'casa', null, 'Vivienda: casa, con S.'),
-  createExercise('sz2', 'sz', EXERCISE_TYPES.FILL_BLANK, 'El color favorito de mi mamá es ___.', 'rosa', null, 'Color y flor: rosa, con S.'),
-  createExercise('sz3', 'sz', EXERCISE_TYPES.FILL_BLANK, 'Ató el paquete con un ___.', 'lazo', null, 'Cinta para amarrar: lazo, con Z.'),
-  createExercise('sz4', 'sz', EXERCISE_TYPES.FILL_BLANK, 'Me duele el ___ de tanto escribir.', 'brazo', null, 'Parte del cuerpo: brazo, con Z.'),
-  createExercise('sz5', 'sz', EXERCISE_TYPES.MULTIPLE_CHOICE, 'En el río vive un ___. ¿Cómo se escribe el animal?', 'pez', ['pes', 'pez'], 'Animal acuático: pez, con Z.'),
-  createExercise('sz6', 'sz', EXERCISE_TYPES.MULTIPLE_CHOICE, 'Después de la tormenta llegó la ___. ¿Cómo se escribe?', 'paz', ['pas', 'paz'], 'Ausencia de conflicto: paz, con Z.'),
-  createExercise('sz7', 'sz', EXERCISE_TYPES.FILL_BLANK, 'Sin tu ayuda no ___ nada, amigo.', 'vales', null, 'Verbo valer (tú): vales, con S final.'),
-  createExercise('sz8', 'sz', EXERCISE_TYPES.FILL_BLANK, '¿Qué ___ los fines de semana?', 'haces', null, 'Verbo hacer (tú): haces, con S final.'),
-  createExercise('sz9', 'sz', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "me duele el braco"', 'Me duele el brazo', null, 'Parte del cuerpo: brazo, con Z.'),
-  createExercise('sz10', 'sz', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "tengo mucha pas"', 'Tengo mucha paz', null, 'Sustantivo: paz, con Z.'),
-];
+const szExercises = processCategory([
+  { id: 'sz1', category: 'sz', type: 'fill_blank', question: 'Mi ___ tiene un jardín grande.', answer: 'casa', options: null, explanation: 'Vivienda: casa, con S.' },
+  { id: 'sz2', category: 'sz', type: 'fill_blank', question: 'El color favorito de mi mamá es ___.', answer: 'rosa', options: null, explanation: 'Color y flor: rosa, con S.' },
+  { id: 'sz3', category: 'sz', type: 'fill_blank', question: 'Ató el paquete con un ___.', answer: 'lazo', options: null, explanation: 'Cinta para amarrar: lazo, con Z.' },
+  { id: 'sz4', category: 'sz', type: 'fill_blank', question: 'Me duele el ___ de tanto escribir.', answer: 'brazo', options: null, explanation: 'Parte del cuerpo: brazo, con Z.' },
+  { id: 'sz5', category: 'sz', type: 'multiple_choice', question: 'En el río vive un ___. ¿Cómo se escribe el animal?', answer: 'pez', options: ['pes', 'pez'], explanation: 'Animal acuático: pez, con Z.' },
+  { id: 'sz6', category: 'sz', type: 'multiple_choice', question: 'Después de la tormenta llegó la ___. ¿Cómo se escribe?', answer: 'paz', options: ['pas', 'paz'], explanation: 'Ausencia de conflicto: paz, con Z.' },
+  { id: 'sz7', category: 'sz', type: 'fill_blank', question: 'Sin tu ayuda no ___ nada, amigo.', answer: 'vales', options: null, explanation: 'Verbo valer (tú): vales, con S final.' },
+  { id: 'sz8', category: 'sz', type: 'fill_blank', question: '¿Qué ___ los fines de semana?', answer: 'haces', options: null, explanation: 'Verbo hacer (tú): haces, con S final.' },
+  { id: 'sz9', category: 'sz', type: 'correct_sentence', question: 'Corrige: "me duele el braco"', answer: 'Me duele el brazo', options: null, explanation: 'Parte del cuerpo: brazo, con Z.' },
+  { id: 'sz10', category: 'sz', type: 'correct_sentence', question: 'Corrige: "tengo mucha pas"', answer: 'Tengo mucha paz', options: null, explanation: 'Sustantivo: paz, con Z.' },
+]);
 
 /* ==================== ACENTOS ==================== */
-const acentosExercises = [
-  createExercise('ac1', 'acentos', EXERCISE_TYPES.FILL_BLANK, 'Pido un ___ con leche, por favor.', 'café', null, 'Aguda terminada en vocal: café lleva tilde. Escríbelo con la tilde: é.'),
-  createExercise('ac2', 'acentos', EXERCISE_TYPES.FILL_BLANK, 'El ___ maúlla todas las noches.', 'ratón', null, 'Aguda terminada en N: ratón lleva tilde. Escríbelo con ó.'),
-  createExercise('ac3', 'acentos', EXERCISE_TYPES.FILL_BLANK, 'Escribí tu nombre con un ___.', 'lápiz', null, 'Aguda terminada en Z: lápiz lleva tilde. Escríbelo con á.'),
-  createExercise('ac4', 'acentos', EXERCISE_TYPES.FILL_BLANK, 'Bajo el ___ del parque hace fresco.', 'árbol', null, 'Llana terminada en L: árbol lleva tilde. Escríbelo con á.'),
-  createExercise('ac5', 'acentos', EXERCISE_TYPES.MULTIPLE_CHOICE, 'Llana terminada en L, ¿cuál lleva tilde?', 'fácil', ['facil', 'fácil'], 'Las llanas terminadas en L llevan tilde: fácil.'),
-  createExercise('ac6', 'acentos', EXERCISE_TYPES.MULTIPLE_CHOICE, 'Las esdrújulas siempre llevan tilde. ¿Cuál está bien escrita?', 'música', ['musica', 'música'], 'Esdrújula: música. Todas las esdrújulas llevan tilde.'),
-  createExercise('ac7', 'acentos', EXERCISE_TYPES.FILL_BLANK, 'Apunta mi número de ___ nuevo.', 'teléfono', null, 'Esdrújula: teléfono siempre lleva tilde. Escríbelo con é.'),
-  createExercise('ac8', 'acentos', EXERCISE_TYPES.FILL_BLANK, 'Sin riego, la planta se queda ___.', 'frágil', null, 'Llana terminada en L: frágil lleva tilde. Escríbelo con á.'),
-  createExercise('ac9', 'acentos', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "el examen fue facil"', 'El examen fue fácil', null, '"Fácil" es llana terminada en L: lleva tilde.'),
-  createExercise('ac10', 'acentos', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "compre un cafe ayer"', 'Compré un café ayer', null, '"Compré" (pretérito) y "café" (aguda en vocal) llevan tilde.'),
-];
+const acentosExercises = processCategory([
+  { id: 'ac1', category: 'acentos', type: 'fill_blank', question: 'Pido un ___ con leche, por favor.', answer: 'café', options: null, explanation: 'Aguda terminada en vocal: café lleva tilde. Escríbelo con la tilde: é.' },
+  { id: 'ac2', category: 'acentos', type: 'fill_blank', question: 'El ___ maúlla todas las noches.', answer: 'ratón', options: null, explanation: 'Aguda terminada en N: ratón lleva tilde. Escríbelo con ó.' },
+  { id: 'ac3', category: 'acentos', type: 'fill_blank', question: 'Escribí tu nombre con un ___.', answer: 'lápiz', options: null, explanation: 'Aguda terminada en Z: lápiz lleva tilde. Escríbelo con á.' },
+  { id: 'ac4', category: 'acentos', type: 'fill_blank', question: 'Bajo el ___ del parque hace fresco.', answer: 'árbol', options: null, explanation: 'Llana terminada en L: árbol lleva tilde. Escríbelo con á.' },
+  { id: 'ac5', category: 'acentos', type: 'multiple_choice', question: 'Llana terminada en L, ¿cuál lleva tilde?', answer: 'fácil', options: ['facil', 'fácil'], explanation: 'Las llanas terminadas en L llevan tilde: fácil.' },
+  { id: 'ac6', category: 'acentos', type: 'multiple_choice', question: 'Las esdrújulas siempre llevan tilde. ¿Cuál está bien escrita?', answer: 'música', options: ['musica', 'música'], explanation: 'Esdrújula: música. Todas las esdrújulas llevan tilde.' },
+  { id: 'ac7', category: 'acentos', type: 'fill_blank', question: 'Apunta mi número de ___ nuevo.', answer: 'teléfono', options: null, explanation: 'Esdrújula: teléfono siempre lleva tilde. Escríbelo con é.' },
+  { id: 'ac8', category: 'acentos', type: 'fill_blank', question: 'Sin riego, la planta se queda ___.', answer: 'frágil', options: null, explanation: 'Llana terminada en L: frágil lleva tilde. Escríbelo con á.' },
+  { id: 'ac9', category: 'acentos', type: 'correct_sentence', question: 'Corrige: "el examen fue facil"', answer: 'El examen fue fácil', options: null, explanation: '"Fácil" es llana terminada en L: lleva tilde.' },
+  { id: 'ac10', category: 'acentos', type: 'correct_sentence', question: 'Corrige: "compre un cafe ayer"', answer: 'Compré un café ayer', options: null, explanation: '"Compré" (pretérito) y "café" (aguda en vocal) llevan tilde.' },
+]);
 
 /* ==================== PALABRAS AMBIGUAS ==================== */
-const ambiguasExercises = [
-  createExercise('amb1', 'ambiguas', EXERCISE_TYPES.FILL_BLANK, 'Vamos ___ si está abierta la tienda.', 'a ver', null, '"A ver" (mirar, comprobar): preposición a + verbo ver. "Haber" es otro verbo.'),
-  createExercise('amb2', 'ambiguas', EXERCISE_TYPES.FILL_BLANK, '¿___ algo de comer en la nevera?', 'hay', null, 'Existencia: hay (de haber impersonal). "Ahy" y "ahí" no sirven aquí.'),
-  createExercise('amb3', 'ambiguas', EXERCISE_TYPES.FILL_BLANK, 'Él está ___ hacia la escuela.', 'yendo', null, 'Gerundio de ir: yendo. "Yendo" nunca se escribe con LL.'),
-  createExercise('amb4', 'ambiguas', EXERCISE_TYPES.FILL_BLANK, 'Volví del viaje ___.', 'ayer', null, 'Adverbio de tiempo: ayer, con Y.'),
-  createExercise('amb5', 'ambiguas', EXERCISE_TYPES.MULTIPLE_CHOICE, '"Vamos ___ qué pasa en la plaza." ¿Qué completa la frase?', 'a ver', ['haber', 'a ver'], '"A ver" = mirar/comprobar. "Haber" es el verbo auxiliar.'),
-  createExercise('amb6', 'ambiguas', EXERCISE_TYPES.MULTIPLE_CHOICE, '"Está ___ caminando al trabajo." ¿Cuál es el gerundio correcto de ir?', 'yendo', ['llendo', 'yendo'], 'Gerundio de ir: yendo, con Y. "Llendo" no existe.'),
-  createExercise('amb7', 'ambiguas', EXERCISE_TYPES.FILL_BLANK, '___ que estudiar para el examen.', 'hay', null, 'Obligación impersonal: hay que + infinitivo.'),
-  createExercise('amb8', 'ambiguas', EXERCISE_TYPES.FILL_BLANK, '___ si viene tu prima hoy.', 'a ver', null, '"A ver si..." = expresión fija de expectativa.'),
-  createExercise('amb9', 'ambiguas', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "voy allendo a la escuela"', 'Voy yendo a la escuela', null, 'Gerundio de ir: yendo, con Y. "Allendo"/"llendo" no existen.'),
-  createExercise('amb10', 'ambiguas', EXERCISE_TYPES.CORRECT_SENTENCE, 'Corrige: "a ber si hay suerte"', 'A ver si hay suerte', null, '"A ver": preposición a + verbo ver. "Ber" no existe.'),
-];
+const ambiguasExercises = processCategory([
+  { id: 'amb1', category: 'ambiguas', type: 'fill_blank', question: 'Vamos ___ si está abierta la tienda.', answer: 'a ver', options: null, explanation: '"A ver" (mirar, comprobar): preposición a + verbo ver. "Haber" es otro verbo.' },
+  { id: 'amb2', category: 'ambiguas', type: 'fill_blank', question: '¿___ algo de comer en la nevera?', answer: 'hay', options: null, explanation: 'Existencia: hay (de haber impersonal). "Ahy" y "ahí" no sirven aquí.' },
+  { id: 'amb3', category: 'ambiguas', type: 'fill_blank', question: 'Él está ___ hacia la escuela.', answer: 'yendo', options: null, explanation: 'Gerundio de ir: yendo. "Yendo" nunca se escribe con LL.' },
+  { id: 'amb4', category: 'ambiguas', type: 'fill_blank', question: 'Volví del viaje ___.', answer: 'ayer', options: null, explanation: 'Adverbio de tiempo: ayer, con Y.' },
+  { id: 'amb5', category: 'ambiguas', type: 'multiple_choice', question: '"Vamos ___ qué pasa en la plaza." ¿Qué completa la frase?', answer: 'a ver', options: ['haber', 'a ver'], explanation: '"A ver" = mirar/comprobar. "Haber" es el verbo auxiliar.' },
+  { id: 'amb6', category: 'ambiguas', type: 'multiple_choice', question: '"Está ___ caminando al trabajo." ¿Cuál es el gerundio correcto de ir?', answer: 'yendo', options: ['llendo', 'yendo'], explanation: 'Gerundio de ir: yendo, con Y. "Llendo" no existe.' },
+  { id: 'amb7', category: 'ambiguas', type: 'fill_blank', question: '___ que estudiar para el examen.', answer: 'hay', options: null, explanation: 'Obligación impersonal: hay que + infinitivo.' },
+  { id: 'amb8', category: 'ambiguas', type: 'fill_blank', question: '___ si viene tu prima hoy.', answer: 'a ver', options: null, explanation: '"A ver si..." = expresión fija de expectativa.' },
+  { id: 'amb9', category: 'ambiguas', type: 'correct_sentence', question: 'Corrige: "voy allendo a la escuela"', answer: 'Voy yendo a la escuela', options: null, explanation: 'Gerundio de ir: yendo, con Y. "Allendo"/"llendo" no existen.' },
+  { id: 'amb10', category: 'ambiguas', type: 'correct_sentence', question: 'Corrige: "a ber si hay suerte"', answer: 'A ver si hay suerte', options: null, explanation: '"A ver": preposición a + verbo ver. "Ber" no existe.' },
+]);
 
 /* ==================== GENERAL ==================== */
 const generalExercises = [
@@ -241,12 +299,8 @@ export const ALL_EXERCISES = [
   ...acentosExercises,
   ...ambiguasExercises,
   ...generalExercises,
+  ...lote2Exercises,
 ];
-
-CATEGORIES.forEach(cat => {
-  const catExercises = ALL_EXERCISES.filter(e => e.category === cat.id);
-  cat.totalExercises = catExercises.length;
-});
 
 export function getExercisesByCategory(categoryId) {
   if (categoryId === 'general') {

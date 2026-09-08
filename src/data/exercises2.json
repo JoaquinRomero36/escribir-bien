@@ -1,0 +1,409 @@
+{
+  "meta": {
+    "descripcion": "Lote 2 del banco de ejercicios. Complementa a banco_ejercicios_ortografia.json (lote 1). Los ids de completar_oracion arrancan en 101 y los de textos_con_errores en 7, para no pisar al lote 1.",
+    "nota": "Podés seguir pidiendo lote 3, lote 4, etc. cuando quieras, siempre con el mismo formato."
+  },
+
+  "lista_confusiones": [
+    {"grupo": ["baca", "vaca"], "explicacion": "baca = portaequipajes del auto | vaca = animal"},
+    {"grupo": ["barón", "varón"], "explicacion": "barón = título de nobleza | varón = hombre"},
+    {"grupo": ["basto", "vasto"], "explicacion": "basto = tosco, sin refinar | vasto = extenso, muy grande"},
+    {"grupo": ["bello", "vello"], "explicacion": "bello = hermoso | vello = pelo del cuerpo"},
+    {"grupo": ["bienes", "vienes"], "explicacion": "bienes = posesiones/propiedades | vienes = venir (2da persona)"},
+    {"grupo": ["botar", "votar"], "explicacion": "botar = arrojar, saltar, tirar | votar = elegir en una elección"},
+    {"grupo": ["cabe", "cave"], "explicacion": "cabe = caber (3ra persona) | cave = cavar (subjuntivo)"},
+    {"grupo": ["grabar", "gravar"], "explicacion": "grabar = registrar audio/video | gravar = imponer un impuesto"},
+    {"grupo": ["hierba", "hierva"], "explicacion": "hierba = planta/pasto | hierva = hervir (subjuntivo)"},
+    {"grupo": ["rebelar", "revelar"], "explicacion": "rebelar(se) = sublevarse | revelar = descubrir, mostrar"},
+    {"grupo": ["sabia", "savia"], "explicacion": "sabia = con sabiduría | savia = líquido interno de las plantas"},
+    {"grupo": ["tubo", "tuvo"], "explicacion": "tubo = objeto cilíndrico | tuvo = tener (pretérito)"},
+    {"grupo": ["bota", "vota"], "explicacion": "bota = calzado / verbo botar | vota = verbo votar"},
+    {"grupo": ["bacilo", "vacilo"], "explicacion": "bacilo = tipo de bacteria | vacilo = dudar, tambalear"},
+    {"grupo": ["a", "ha", "ah"], "explicacion": "a = preposición | ha = haber (3ra persona) | ah = interjección"},
+    {"grupo": ["hasta", "asta"], "explicacion": "hasta = preposición de límite | asta = cuerno o palo de bandera"},
+    {"grupo": ["hecho", "echo"], "explicacion": "hecho = hacer (participio) / suceso | echo = echar (1ra persona)"},
+    {"grupo": ["hola", "ola"], "explicacion": "hola = saludo | ola = onda del mar"},
+    {"grupo": ["honda", "onda"], "explicacion": "honda = profunda / arma para lanzar piedras | onda = ondulación, onda de sonido"},
+    {"grupo": ["hora", "ora"], "explicacion": "hora = unidad de tiempo | ora = orar (3ra persona)"},
+    {"grupo": ["deshecho", "desecho"], "explicacion": "deshecho = destruido, participio de deshacer | desecho = basura, residuo"},
+    {"grupo": ["hierro", "yerro"], "explicacion": "hierro = metal | yerro = error, equivocación"},
+    {"grupo": ["horca", "orca"], "explicacion": "horca = instrumento para ahorcar | orca = animal marino"},
+    {"grupo": ["huso", "uso"], "explicacion": "huso = instrumento para hilar / huso horario | uso = utilizar"},
+    {"grupo": ["has", "haz", "as"], "explicacion": "has = haber (2da persona) | haz = hacer (imperativo) / manojo | as = carta / experto"},
+    {"grupo": ["calló", "cayó"], "explicacion": "calló = callar (pretérito) | cayó = caer (pretérito)"},
+    {"grupo": ["halla", "haya", "aya", "valla", "vaya"], "explicacion": "halla = hallar (encontrar) | haya = haber (subjuntivo) / árbol | aya = niñera | valla = cerco/publicidad | vaya = ir (subjuntivo)"},
+    {"grupo": ["arrollo", "arroyo"], "explicacion": "arrollo = arrollar (atropellar) | arroyo = río pequeño"},
+    {"grupo": ["malla", "maya"], "explicacion": "malla = red / traje de baño | maya = civilización / mes del año"},
+    {"grupo": ["pollo", "poyo"], "explicacion": "pollo = ave | poyo = banco de piedra junto a una pared"},
+    {"grupo": ["rallar", "rayar"], "explicacion": "rallar = raspar con rallador | rayar = hacer una raya, dibujar líneas"},
+    {"grupo": ["abrasar", "abrazar"], "explicacion": "abrasar = quemar | abrazar = dar un abrazo"},
+    {"grupo": ["cazar", "casar"], "explicacion": "cazar = perseguir animales | casar(se) = contraer matrimonio"},
+    {"grupo": ["cerrar", "serrar"], "explicacion": "cerrar = tapar, cerrar una puerta | serrar = cortar con sierra"},
+    {"grupo": ["ciento", "siento"], "explicacion": "ciento = número 100 | siento = sentir (1ra persona)"},
+    {"grupo": ["cocer", "coser"], "explicacion": "cocer = cocinar con calor | coser = unir tela con hilo"},
+    {"grupo": ["concejo", "consejo"], "explicacion": "concejo = ayuntamiento, corporación municipal | consejo = recomendación"},
+    {"grupo": ["cien", "sien"], "explicacion": "cien = número 100 | sien = parte lateral de la cabeza"},
+    {"grupo": ["seso", "cesó"], "explicacion": "seso = cerebro/juicio | cesó = cesar (pretérito)"},
+    {"grupo": ["taza", "tasa"], "explicacion": "taza = recipiente para tomar líquidos | tasa = impuesto/porcentaje"},
+    {"grupo": ["vez", "ves"], "explicacion": "vez = ocasión | ves = ver (2da persona)"},
+    {"grupo": ["asar", "azar"], "explicacion": "asar = cocinar al fuego | azar = suerte, casualidad"},
+    {"grupo": ["cauce", "cause"], "explicacion": "cauce = lecho de un río | cause = causar (subjuntivo)"},
+    {"grupo": ["losa", "loza"], "explicacion": "losa = piedra plana | loza = vajilla de cerámica"},
+    {"grupo": ["maza", "masa"], "explicacion": "maza = herramienta pesada | masa = mezcla para cocinar / cantidad de gente"},
+    {"grupo": ["peces", "peses"], "explicacion": "peces = animales acuáticos | peses = pesar (subjuntivo)"},
+    {"grupo": ["expiar", "espiar"], "explicacion": "expiar = purgar una culpa | espiar = observar en secreto"},
+    {"grupo": ["extático", "estático"], "explicacion": "extático = en éxtasis | estático = sin movimiento"},
+    {"grupo": ["a ver", "haber"], "explicacion": "a ver = ir a mirar/comprobar | haber = verbo (existir) o sustantivo"},
+    {"grupo": ["hay", "ahí", "ay"], "explicacion": "hay = haber (existir) | ahí = lugar | ay = interjección de dolor/sorpresa"},
+    {"grupo": ["yendo", "llendo (incorrecto)"], "explicacion": "yendo es la única forma correcta del gerundio de ir; \"llendo\" no existe"},
+    {"grupo": ["llegue", "llege (incorrecto)"], "explicacion": "llegue es la única forma correcta; \"llege\" no existe"},
+    {"grupo": ["votar", "botar"], "explicacion": "ver arriba: votar (elegir) vs botar (arrojar)"}
+  ],
+
+  "fichas_memoria_ampliadas": {
+    "b_v": [
+      {"palabra": "bicicleta", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "biblioteca", "regla": "El prefijo BIBLIO- se escribe con B"},
+      {"palabra": "problema", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "posible", "regla": "Los adjetivos terminados en -BLE se escriben con B"},
+      {"palabra": "amable", "regla": "Los adjetivos terminados en -BLE se escriben con B"},
+      {"palabra": "terrible", "regla": "Los adjetivos terminados en -BLE se escriben con B"},
+      {"palabra": "movible", "regla": "Los adjetivos terminados en -BLE se escriben con B (salvo levísimo grupo con V como \"vívido\")"},
+      {"palabra": "también", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "trabajo", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "cabeza", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "abuela", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "sábado", "regla": "Palabra de uso frecuente con B"},
+      {"palabra": "cambiar", "regla": "El grupo -MB- siempre va con B"},
+      {"palabra": "hombre", "regla": "El grupo -MB- siempre va con B"},
+      {"palabra": "también", "regla": "El grupo -MB- siempre va con B"},
+      {"palabra": "invierno", "regla": "El grupo -NV- siempre va con V"},
+      {"palabra": "convertir", "regla": "El grupo -NV- siempre va con V"},
+      {"palabra": "envase", "regla": "El grupo -NV- siempre va con V"},
+      {"palabra": "verdad", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "ventana", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "viaje", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "voz", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "vecino", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "avión", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "joven", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "nave", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "clave", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "grave", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "suave", "regla": "Palabra de uso frecuente con V"},
+      {"palabra": "nueve", "regla": "Los numerales van con V"}
+    ],
+    "h": [
+      {"palabra": "hambre", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hueco", "regla": "El diptongo UE al inicio de palabra lleva H"},
+      {"palabra": "huerta", "regla": "El diptongo UE al inicio de palabra lleva H"},
+      {"palabra": "huella", "regla": "El diptongo UE al inicio de palabra lleva H"},
+      {"palabra": "hoyo", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hueso", "regla": "El diptongo UE al inicio de palabra lleva H"},
+      {"palabra": "hoja", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hijo", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hilo", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "humo", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "húmedo", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "helar", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hervor", "regla": "Familia de HERVIR lleva H"},
+      {"palabra": "hostil", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hueste", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hipnosis", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hidrógeno", "regla": "El prefijo HIDRO- se escribe con H"},
+      {"palabra": "hidratar", "regla": "El prefijo HIDRO- se escribe con H"},
+      {"palabra": "hospedar", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "honor", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "honesto", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "horario", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "horizonte", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hormigón", "regla": "Palabra de uso frecuente con H"},
+      {"palabra": "hoguera", "regla": "Palabra de uso frecuente con H"}
+    ],
+    "ll_y": [
+      {"palabra": "llanto", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "llenar", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "llama", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "llanura", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "llanta", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "sello", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "cepillo", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "castillo", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "cuchillo", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "anillo", "regla": "Palabra de uso frecuente con LL"},
+      {"palabra": "yeso", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "yema", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "yerno", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "yodo", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "proyecto", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "trayecto", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "desayuno", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "apoyo", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "suyo", "regla": "Palabra de uso frecuente con Y"},
+      {"palabra": "influyó", "regla": "Verbo terminado en -UIR lleva Y en pretérito (influyó, construyó)"}
+    ],
+    "s_c_z": [
+      {"palabra": "servicio", "regla": "Palabra de uso frecuente con S y CI"},
+      {"palabra": "ciudad", "regla": "Palabra de uso frecuente con CI"},
+      {"palabra": "cielo", "regla": "Palabra de uso frecuente con CI"},
+      {"palabra": "cine", "regla": "Palabra de uso frecuente con C"},
+      {"palabra": "cepillo", "regla": "no aplica aquí (repetida por error)"},
+      {"palabra": "zanahoria", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "zorro", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "azúcar", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "brazo", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "cabeza", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "fuerza", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "pereza", "regla": "Palabra de uso frecuente con Z"},
+      {"palabra": "belleza", "regla": "Sustantivos abstractos terminados en -EZA llevan Z"},
+      {"palabra": "tristeza", "regla": "Sustantivos abstractos terminados en -EZA llevan Z"},
+      {"palabra": "naturaleza", "regla": "Sustantivos abstractos terminados en -EZA llevan Z"},
+      {"palabra": "profesión", "regla": "Sustantivo terminado en -SIÓN"},
+      {"palabra": "televisión", "regla": "Sustantivo terminado en -SIÓN"},
+      {"palabra": "comprensión", "regla": "Sustantivo terminado en -SIÓN"},
+      {"palabra": "estación", "regla": "Sustantivo terminado en -CIÓN"},
+      {"palabra": "información", "regla": "Sustantivo terminado en -CIÓN"},
+      {"palabra": "invitación", "regla": "Sustantivo terminado en -CIÓN"},
+      {"palabra": "atención", "regla": "Sustantivo terminado en -CIÓN"},
+      {"palabra": "situación", "regla": "Sustantivo terminado en -CIÓN"},
+      {"palabra": "emoción", "regla": "Sustantivo terminado en -CIÓN"},
+      {"palabra": "seguridad", "regla": "Palabra de uso frecuente con S"}
+    ],
+    "x": [
+      {"palabra": "extremo", "regla": "El prefijo EXTRA-/EXTREM- se escribe con X"},
+      {"palabra": "expresar", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "exponer", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "exigir", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "existir", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "extender", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "extraer", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "exportar", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "excepción", "regla": "El prefijo EX- se escribe con X"},
+      {"palabra": "auxilio", "regla": "Palabra de uso frecuente con X"},
+      {"palabra": "taxi", "regla": "Palabra de uso frecuente con X"},
+      {"palabra": "óxido", "regla": "Palabra de uso frecuente con X"},
+      {"palabra": "sexto", "regla": "Palabra de uso frecuente con X"},
+      {"palabra": "máximo", "regla": "Palabra de uso frecuente con X"},
+      {"palabra": "anexo", "regla": "Palabra de uso frecuente con X"}
+    ]
+  },
+
+  "completar_oracion": [
+    {"id": 101, "nivel": "facil", "categoria": "b_v", "oracion": "Fuimos en ___ hasta la casa de mis tíos, que viven en otra provincia.", "respuesta": "avión"},
+    {"id": 102, "nivel": "facil", "categoria": "b_v", "oracion": "Abrí la ___ para que entrara aire fresco a la habitación.", "respuesta": "ventana"},
+    {"id": 103, "nivel": "facil", "categoria": "b_v", "oracion": "Mi ___ vive al lado de casa y siempre nos saluda.", "respuesta": "vecino"},
+    {"id": 104, "nivel": "facil", "categoria": "b_v", "oracion": "El ___ que hicimos en clase de arte quedó colgado en el pasillo.", "respuesta": "trabajo"},
+    {"id": 105, "nivel": "facil", "categoria": "b_v", "oracion": "Todos los ___ vamos a visitar a mi abuela.", "respuesta": "sábados"},
+    {"id": 106, "nivel": "facil", "categoria": "b_v", "oracion": "Mi ___ me contó un cuento antes de dormir.", "respuesta": "abuela"},
+    {"id": 107, "nivel": "medio", "categoria": "b_v", "oracion": "El actor tiene una ___ muy particular, se lo reconoce enseguida.", "respuesta": "voz"},
+    {"id": 108, "nivel": "medio", "categoria": "b_v", "oracion": "Fue muy ___ conmigo cuando me perdí en la estación de tren.", "respuesta": "amable"},
+    {"id": 109, "nivel": "medio", "categoria": "b_v", "oracion": "El accidente le dejó una herida ___ en la pierna.", "respuesta": "grave"},
+    {"id": 110, "nivel": "medio", "categoria": "b_v", "oracion": "Es ___ que el tren llegue a horario con este clima.", "respuesta": "posible"},
+    {"id": 111, "nivel": "medio", "categoria": "b_v", "oracion": "El bebé tiene la piel muy ___ al tacto.", "respuesta": "suave"},
+    {"id": 112, "nivel": "medio", "categoria": "b_v", "oracion": "Necesitaba la ___ de acceso para entrar al edificio.", "respuesta": "clave"},
+    {"id": 113, "nivel": "dificil", "categoria": "b_v", "oracion": "Aunque el mueble era grande, resultó ser bastante ___ gracias a las ruedas.", "respuesta": "movible"},
+    {"id": 114, "nivel": "dificil", "categoria": "b_v", "oracion": "El barco se convirtió en una ___ abandonada en medio del puerto.", "respuesta": "nave"},
+    {"id": 115, "nivel": "dificil", "categoria": "b_v", "oracion": "En ___, la ciudad se cubre de nieve durante varios meses.", "respuesta": "invierno"},
+    {"id": 116, "nivel": "dificil", "categoria": "b_v", "oracion": "El auto se pudo ___ en un coche eléctrico luego de la reforma.", "respuesta": "convertir"},
+    {"id": 117, "nivel": "dificil", "categoria": "b_v", "oracion": "El detergente venía en un ___ de plástico reciclado.", "respuesta": "envase"},
+
+    {"id": 118, "nivel": "facil", "categoria": "h", "oracion": "Después de correr toda la tarde, sentía mucha ___.", "respuesta": "hambre"},
+    {"id": 119, "nivel": "facil", "categoria": "h", "oracion": "Mi ___ nació hace dos semanas y todavía duerme mucho.", "respuesta": "hijo"},
+    {"id": 120, "nivel": "facil", "categoria": "h", "oracion": "Usé un ___ rojo para coser el botón de la camisa.", "respuesta": "hilo"},
+    {"id": 121, "nivel": "facil", "categoria": "h", "oracion": "El asado largaba mucho ___ por la parrilla.", "respuesta": "humo"},
+    {"id": 122, "nivel": "facil", "categoria": "h", "oracion": "Fuimos a pasear a la ___ y cosechamos tomates.", "respuesta": "huerta"},
+    {"id": 123, "nivel": "medio", "categoria": "h", "oracion": "El animal dejó una ___ marcada en la nieve.", "respuesta": "huella"},
+    {"id": 124, "nivel": "medio", "categoria": "h", "oracion": "El agua ya empezó a soltar ___ dentro de la olla.", "respuesta": "hervor"},
+    {"id": 125, "nivel": "medio", "categoria": "h", "oracion": "El médico le recetó una crema para la piel muy ___.", "respuesta": "húmeda"},
+    {"id": 126, "nivel": "medio", "categoria": "h", "oracion": "El vecino recibió con mucho ___ a los turistas perdidos.", "respuesta": "honor"},
+    {"id": 127, "nivel": "medio", "categoria": "h", "oracion": "Encendieron una ___ enorme para calentarse durante la noche.", "respuesta": "hoguera"},
+    {"id": 128, "nivel": "dificil", "categoria": "h", "oracion": "El auditorio quedó en un estado casi de ___ ante el espectáculo.", "respuesta": "hipnosis"},
+    {"id": 129, "nivel": "dificil", "categoria": "h", "oracion": "El globo se elevaba gracias al gas ___ que tenía adentro.", "respuesta": "hidrógeno"},
+    {"id": 130, "nivel": "dificil", "categoria": "h", "oracion": "Fue un jugador ___ que nunca hizo trampa durante su carrera.", "respuesta": "honesto"},
+    {"id": 131, "nivel": "dificil", "categoria": "h", "oracion": "El barco enemigo mantenía una actitud ___ frente al puerto.", "respuesta": "hostil"},
+    {"id": 132, "nivel": "dificil", "categoria": "h", "oracion": "La construcción usó toneladas de ___ para la base del edificio.", "respuesta": "hormigón"},
+
+    {"id": 133, "nivel": "facil", "categoria": "ll_y", "oracion": "El bebé se puso a hacer ___ cuando le sacaron el chupete.", "respuesta": "llanto"},
+    {"id": 134, "nivel": "facil", "categoria": "ll_y", "oracion": "Tengo que ___ el tanque de agua antes de que se corte el suministro.", "respuesta": "llenar"},
+    {"id": 135, "nivel": "facil", "categoria": "ll_y", "oracion": "La vela se apagó porque no quedaba ___.", "respuesta": "llama"},
+    {"id": 136, "nivel": "facil", "categoria": "ll_y", "oracion": "Antes de comer, hay que lavarse los dientes con el ___.", "respuesta": "cepillo"},
+    {"id": 137, "nivel": "facil", "categoria": "ll_y", "oracion": "El príncipe vivía en un enorme ___ rodeado de un lago.", "respuesta": "castillo"},
+    {"id": 138, "nivel": "medio", "categoria": "ll_y", "oracion": "Corté la carne con un ___ bien afilado.", "respuesta": "cuchillo"},
+    {"id": 139, "nivel": "medio", "categoria": "ll_y", "oracion": "El médico le colocó un ___ en la muñeca fracturada.", "respuesta": "yeso"},
+    {"id": 140, "nivel": "medio", "categoria": "ll_y", "oracion": "Separó la clara de la ___ para hacer la receta.", "respuesta": "yema"},
+    {"id": 141, "nivel": "medio", "categoria": "ll_y", "oracion": "El arquitecto presentó el ___ de la nueva plaza del barrio.", "respuesta": "proyecto"},
+    {"id": 142, "nivel": "medio", "categoria": "ll_y", "oracion": "Ese pueblo quedó como el último punto del ___ que hicimos en bicicleta.", "respuesta": "trayecto"},
+    {"id": 143, "nivel": "dificil", "categoria": "ll_y", "oracion": "La lluvia constante ___ (influir, pretérito) en la decisión de suspender el partido.", "respuesta": "influyó"},
+    {"id": 144, "nivel": "dificil", "categoria": "ll_y", "oracion": "El equipo agradeció el ___ incondicional de todos los hinchas.", "respuesta": "apoyo"},
+    {"id": 145, "nivel": "dificil", "categoria": "ll_y", "oracion": "Ese auto es ___, no lo compartimos con nadie más.", "respuesta": "suyo"},
+    {"id": 146, "nivel": "dificil", "categoria": "ll_y", "oracion": "Todos los días mi ___ es café con tostadas.", "respuesta": "desayuno"},
+
+    {"id": 147, "nivel": "facil", "categoria": "s_c_z", "oracion": "El médico revisó mi historia clínica en el centro de ___.", "respuesta": "salud"},
+    {"id": 148, "nivel": "facil", "categoria": "s_c_z", "oracion": "El conejo escapó corriendo apenas vio al ___.", "respuesta": "zorro"},
+    {"id": 149, "nivel": "facil", "categoria": "s_c_z", "oracion": "Le puso mucho ___ al mate para que quedara dulce.", "respuesta": "azúcar"},
+    {"id": 150, "nivel": "facil", "categoria": "s_c_z", "oracion": "Se lastimó el ___ al levantar una caja muy pesada.", "respuesta": "brazo"},
+    {"id": 151, "nivel": "facil", "categoria": "s_c_z", "oracion": "El conejo comió toda la ___ que le dimos.", "respuesta": "zanahoria"},
+    {"id": 152, "nivel": "medio", "categoria": "s_c_z", "oracion": "Hizo mucha ___ para levantar la mesa entre los dos.", "respuesta": "fuerza"},
+    {"id": 153, "nivel": "medio", "categoria": "s_c_z", "oracion": "Le dio ___ terminar los deberes antes de salir a jugar.", "respuesta": "pereza"},
+    {"id": 154, "nivel": "medio", "categoria": "s_c_z", "oracion": "Todos comentaban la ___ del vestido que llevaba puesto.", "respuesta": "belleza"},
+    {"id": 155, "nivel": "medio", "categoria": "s_c_z", "oracion": "La ___ del final de la película sorprendió a todos los espectadores.", "respuesta": "emoción"},
+    {"id": 156, "nivel": "medio", "categoria": "s_c_z", "oracion": "El clima determina la ___ del año en la que conviene viajar.", "respuesta": "estación"},
+    {"id": 157, "nivel": "dificil", "categoria": "s_c_z", "oracion": "El noticiero dio mucha ___ sobre el temporal que se acercaba.", "respuesta": "información"},
+    {"id": 158, "nivel": "dificil", "categoria": "s_c_z", "oracion": "Se dedicó toda la vida a la ___ de abogado.", "respuesta": "profesión"},
+    {"id": 159, "nivel": "dificil", "categoria": "s_c_z", "oracion": "Con la niebla tan espesa, había que extremar la ___ al conducir.", "respuesta": "atención"},
+    {"id": 160, "nivel": "dificil", "categoria": "s_c_z", "oracion": "El intendente explicó la nueva ___ de tránsito para el centro.", "respuesta": "situación"},
+
+    {"id": 161, "nivel": "facil", "categoria": "x", "oracion": "Llamamos a un ___ porque no había colectivos a esa hora.", "respuesta": "taxi"},
+    {"id": 162, "nivel": "facil", "categoria": "x", "oracion": "Marqué el número de ___ por si necesitaba ayuda en la ruta.", "respuesta": "auxilio"},
+    {"id": 163, "nivel": "medio", "categoria": "x", "oracion": "El metal quedó cubierto de ___ después de tanto tiempo a la intemperie.", "respuesta": "óxido"},
+    {"id": 164, "nivel": "medio", "categoria": "x", "oracion": "Alcanzó el ___ histórico de ventas ese mismo mes.", "respuesta": "máximo"},
+    {"id": 165, "nivel": "medio", "categoria": "x", "oracion": "El documento llevaba un ___ con más información sobre el proyecto.", "respuesta": "anexo"},
+    {"id": 166, "nivel": "dificil", "categoria": "x", "oracion": "El profesor hizo una ___ con la única alumna que faltó al examen.", "respuesta": "excepción"},
+    {"id": 167, "nivel": "dificil", "categoria": "x", "oracion": "El deportista logró ___ sus límites en la última carrera.", "respuesta": "extender"},
+    {"id": 168, "nivel": "dificil", "categoria": "x", "oracion": "La empresa comenzó a ___ sus productos a otros países.", "respuesta": "exportar"}
+  ],
+
+  "palabras_ambiguas_ampliado": [
+    {"par": "baca / vaca", "oraciones": [
+      {"nivel": "medio", "oracion": "Subimos las valijas a la ___ del auto para tener más lugar adentro.", "respuesta": "baca"},
+      {"nivel": "medio", "oracion": "En el campo había una ___ pastando cerca del alambrado.", "respuesta": "vaca"}
+    ]},
+    {"par": "botar / votar", "oraciones": [
+      {"nivel": "medio", "oracion": "El jugador empezó a ___ la pelota antes de tirar al aro.", "respuesta": "botar"},
+      {"nivel": "medio", "oracion": "Este año voy a ___ por primera vez en las elecciones.", "respuesta": "votar"}
+    ]},
+    {"par": "grabar / gravar", "oraciones": [
+      {"nivel": "dificil", "oracion": "Decidió ___ la reunión completa para poder revisarla después.", "respuesta": "grabar"},
+      {"nivel": "dificil", "oracion": "El gobierno anunció que iba a ___ con un nuevo impuesto a las importaciones.", "respuesta": "gravar"}
+    ]},
+    {"par": "deshecho / desecho", "oraciones": [
+      {"nivel": "dificil", "oracion": "El castillo de arena quedó completamente ___ tras la primera ola.", "respuesta": "deshecho"},
+      {"nivel": "dificil", "oracion": "Separaron el ___ orgánico del resto de la basura.", "respuesta": "desecho"}
+    ]},
+    {"par": "hierro / yerro", "oraciones": [
+      {"nivel": "dificil", "oracion": "El portón estaba hecho de ___ macizo, muy pesado de mover.", "respuesta": "hierro"},
+      {"nivel": "dificil", "oracion": "Reconoció el ___ que había cometido al firmar sin leer el contrato.", "respuesta": "yerro"}
+    ]},
+    {"par": "horca / orca", "oraciones": [
+      {"nivel": "medio", "oracion": "En el acuario, la ___ saltó fuera del agua ante el asombro de todos.", "respuesta": "orca"}
+    ]},
+    {"par": "huso / uso", "oraciones": [
+      {"nivel": "dificil", "oracion": "Al viajar a otro país, hay que ajustar el reloj al nuevo ___ horario.", "respuesta": "huso"},
+      {"nivel": "dificil", "oracion": "El manual explica el correcto ___ del aparato antes de encenderlo.", "respuesta": "uso"}
+    ]},
+    {"par": "arrollo / arroyo", "oraciones": [
+      {"nivel": "medio", "oracion": "El agua del ___ bajaba clara y fresca desde la montaña.", "respuesta": "arroyo"}
+    ]},
+    {"par": "malla / maya", "oraciones": [
+      {"nivel": "medio", "oracion": "Se puso la ___ para meterse a la pileta.", "respuesta": "malla"},
+      {"nivel": "medio", "oracion": "Estudiamos la civilización ___ en la clase de historia.", "respuesta": "maya"}
+    ]},
+    {"par": "pollo / poyo", "oraciones": [
+      {"nivel": "facil", "oracion": "Cociné ___ al horno con papas para la cena.", "respuesta": "pollo"}
+    ]},
+    {"par": "rallar / rayar", "oraciones": [
+      {"nivel": "medio", "oracion": "Hay que ___ el queso antes de ponerlo sobre la pasta.", "respuesta": "rallar"},
+      {"nivel": "medio", "oracion": "El gato dejó la puerta toda ___ con sus uñas.", "respuesta": "rayada"}
+    ]},
+    {"par": "abrasar / abrazar", "oraciones": [
+      {"nivel": "dificil", "oracion": "El sol de mediodía parecía ___ la piel apenas uno salía a la calle.", "respuesta": "abrasar"},
+      {"nivel": "facil", "oracion": "Corrió a ___ a su papá apenas lo vio bajar del avión.", "respuesta": "abrazar"}
+    ]},
+    {"par": "cerrar / serrar", "oraciones": [
+      {"nivel": "medio", "oracion": "Antes de irse, se olvidó de ___ la puerta del garaje.", "respuesta": "cerrar"},
+      {"nivel": "dificil", "oracion": "Usó una sierra eléctrica para ___ el tronco en varios pedazos.", "respuesta": "serrar"}
+    ]},
+    {"par": "concejo / consejo", "oraciones": [
+      {"nivel": "dificil", "oracion": "El ___ deliberante aprobó el presupuesto para el próximo año.", "respuesta": "concejo"},
+      {"nivel": "facil", "oracion": "Mi papá siempre me da un buen ___ antes de una decisión importante.", "respuesta": "consejo"}
+    ]},
+    {"par": "cien / sien", "oraciones": [
+      {"nivel": "facil", "oracion": "El abuelo cumplió ___ años y toda la familia festejó junta.", "respuesta": "cien"},
+      {"nivel": "medio", "oracion": "Se golpeó la ___ contra el marco de la puerta.", "respuesta": "sien"}
+    ]},
+    {"par": "taza / tasa", "oraciones": [
+      {"nivel": "facil", "oracion": "Se tomó una ___ de café antes de salir a trabajar.", "respuesta": "taza"},
+      {"nivel": "dificil", "oracion": "El banco subió la ___ de interés para los préstamos.", "respuesta": "tasa"}
+    ]},
+    {"par": "asar / azar", "oraciones": [
+      {"nivel": "facil", "oracion": "El domingo vamos a ___ carne en la parrilla del patio.", "respuesta": "asar"},
+      {"nivel": "dificil", "oracion": "El ganador del sorteo se eligió completamente al ___.", "respuesta": "azar"}
+    ]},
+    {"par": "losa / loza", "oraciones": [
+      {"nivel": "dificil", "oracion": "Colocaron una gran ___ de piedra sobre la tumba.", "respuesta": "losa"},
+      {"nivel": "dificil", "oracion": "Guardamos la ___ nueva en la alacena de la cocina.", "respuesta": "loza"}
+    ]},
+    {"par": "expiar / espiar", "oraciones": [
+      {"nivel": "dificil", "oracion": "Sintió que debía ___ su culpa haciendo algo bueno por los demás.", "respuesta": "expiar"},
+      {"nivel": "medio", "oracion": "Los chicos se escondieron para ___ lo que hacían los mayores en la otra sala.", "respuesta": "espiar"}
+    ]}
+  ],
+
+  "textos_con_errores": [
+    {
+      "id": 7,
+      "nivel": "facil",
+      "texto": "El sabado voy a ir a lo de mi abuela porque cumple cien años. Va a aver torta y globos por toda la casa. Mi ermano dijo que va a llevar la camara para sacar fotos.",
+      "errores": [
+        {"incorrecta": "sabado", "correcta": "sábado"},
+        {"incorrecta": "aver", "correcta": "haber"},
+        {"incorrecta": "ermano", "correcta": "hermano"}
+      ]
+    },
+    {
+      "id": 8,
+      "nivel": "facil",
+      "texto": "Fuimos al zoologico y vimos una orca gigante saltando en la pileta. Despues comimos poyo con papas fritas en el patio de comidas. Mi hermanita se puso a llorar porque queria quedarse mas tiempo.",
+      "errores": [
+        {"incorrecta": "poyo", "correcta": "pollo"}
+      ]
+    },
+    {
+      "id": 9,
+      "nivel": "medio",
+      "texto": "El equipo de futbol tubo que jugar bajo una llubia muy fuerte. El arquero atajo un penal decisivo y la ecinada se puso de pie para festejar. Al final del partido, todos se fueron muy contentos asta sus casas.",
+      "errores": [
+        {"incorrecta": "tubo", "correcta": "tuvo"},
+        {"incorrecta": "llubia", "correcta": "lluvia"},
+        {"incorrecta": "ecinada", "correcta": "hinchada"},
+        {"incorrecta": "asta", "correcta": "hasta"}
+      ]
+    },
+    {
+      "id": 10,
+      "nivel": "medio",
+      "texto": "Cuando era chica, mi abuela me enseño a coser botones y a acer masa para las tortas caseras. Ella desia que era importante saver hacer las cosas con las propias manos, y que eso nunca se olbida.",
+      "errores": [
+        {"incorrecta": "enseño", "correcta": "enseñó"},
+        {"incorrecta": "acer", "correcta": "hacer"},
+        {"incorrecta": "desia", "correcta": "decía"},
+        {"incorrecta": "saver", "correcta": "saber"},
+        {"incorrecta": "olbida", "correcta": "olvida"}
+      ]
+    },
+    {
+      "id": 11,
+      "nivel": "dificil",
+      "texto": "El gobierno anuncio que iva a gravar mas fuerte a las importaciones para proteger la produccion local. Segun explicaron, la desicion buscaba equilibrar la valanza comercial, aunque algunos economistas creian que podia generar mas confusion que beneficios.",
+      "errores": [
+        {"incorrecta": "iva", "correcta": "iba"},
+        {"incorrecta": "desicion", "correcta": "decisión"},
+        {"incorrecta": "valanza", "correcta": "balanza"},
+        {"incorrecta": "confusion", "correcta": "confusión"}
+      ]
+    },
+    {
+      "id": 12,
+      "nivel": "dificil",
+      "texto": "Nadie savia con exactitud que aria el jurado, pero todos coincidian en que la desicion iva a ser dificil. El acusado permanecio en silencio durante toda la audiencia, consiente de que cualquier palabra podia ser usada en su contra.",
+      "errores": [
+        {"incorrecta": "savia", "correcta": "sabía"},
+        {"incorrecta": "aria", "correcta": "haría"},
+        {"incorrecta": "desicion", "correcta": "decisión"},
+        {"incorrecta": "iva", "correcta": "iba"},
+        {"incorrecta": "permanecio", "correcta": "permaneció"},
+        {"incorrecta": "consiente", "correcta": "consciente"}
+      ]
+    }
+  ]
+}

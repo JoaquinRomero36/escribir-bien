@@ -2,6 +2,7 @@
 <html lang="es" class="dark">
   <head>
     <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/icon.svg" type="image/svg+xml" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#020617" />
@@ -12,6 +13,31 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Escribir Bien - Domina la ortografía</title>
+    <link rel="canonical" href="https://joaquinromero36.github.io/escribir-bien/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://joaquinromero36.github.io/escribir-bien/" />
+    <meta property="og:title" content="Escribir Bien - Domina la ortografía" />
+    <meta
+      property="og:description"
+      content="Entrenamiento de ortografía para español de LATAM. Ejercicios, flashcards y feedback instantáneo."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Escribir Bien - Domina la ortografía" />
+    <meta
+      name="twitter:description"
+      content="Entrenamiento de ortografía para español de LATAM. Ejercicios, flashcards y feedback instantáneo."
+    />
+    <meta name="twitter:image" content="%PUBLIC_URL%/og-image.png" />
+    <script>
+      try {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add(theme);
+        }
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">

@@ -5,23 +5,32 @@ Spanish orthography training app for LATAM. React (CRA) + custom CSS variables d
 
 ## Commands
 - `npm start` — dev server on localhost:3000 (hot reload)
-- `npm run build` — production build to `build/`
-- `npm test` — react-scripts test (watch mode)
+- `npm run build` — production build to `build/` (CRA, subpath via `homepage` in package.json)
+- `npm test` — react-scripts test (watch mode; usar `CI=true ... --watchAll=false` para CI)
+- `npx eslint src --quiet` — lint (react-app config)
 
 ## Architecture
 ```
 src/
-├── App.js              # Main app: Landing + ThemeProvider + routing logic
+├── App.js              # Main app: Landing + ThemeProvider + state machine ('landing'|'categories'|'exercise'|'results'|'flashcards')
 ├── App.css             # Component styles (uses CSS variables from globals.css)
 ├── index.js            # Entry point
 ├── styles/globals.css  # Design tokens (colors, radius, spacing, shadows, motion)
-├── context/ThemeContext.js  # Dark/light mode + localStorage persistence
+├── context/ThemeContext.js  # Dark/light mode + localStorage persistence (safe try/catch)
 ├── components/
+│   ├── Logo.js         # Logo (pluma + check) usado en Header y hero
 │   ├── icons/index.js  # All SVG icons (inline, tree-shakable)
-│   └── exercises/      # (empty - exercise components go here)
-├── data/               # (empty - exercise datasets go here)
-└── hooks/              # (empty - custom hooks go here)
+│   ├── exercises/      # Tarjetas de categoría (button accesible), ExerciseView (MC only)
+│   └── study/          # Flashcards
+├── data/exercises.js   # Categorías + generación MC (getSmartOptions)
+├── data/exercises2.js  # Lote 2: flashcards + MC + textos + getSmartOptions/generateMisspellings
+└── hooks/useSound.js   # Web Audio feedback (lazy AudioContext + persistencia)
 ```
+
+## Génesis de opciones (regla crítica)
+Las opciones de un ejercicio SIEMPRE son malas escrituras de la MISMA palabra según la
+categoría (H: quitar/añadir h · B/V: swap · S/Z: swap · tildes: quitar tilde · etc.).
+Nunca otra palabra. `getSmartOptions(answer, category, preferred)` en `data/exercises2.js`.
 
 ## Design System (globals.css)
 All styling uses CSS custom properties. **Do not hardcode values.**
