@@ -1,4 +1,4 @@
-import { lote2Exercises, getSmartOptions } from './exercises2';
+import { lote2Exercises, getSmartOptions, shuffle } from './exercises2';
 
 export const CATEGORIES = [
   {
@@ -309,11 +309,13 @@ export function getExercisesByCategory(categoryId) {
   return ALL_EXERCISES.filter(e => e.category === categoryId);
 }
 
-export function getRandomExercises(categoryId, count = 10) {
+export const SESSION_LENGTH = 10;
+
+export function getRandomExercises(categoryId, count = SESSION_LENGTH) {
   const pool = [...getExercisesByCategory(categoryId)];
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  return pool.slice(0, count);
+  return pool.slice(0, count).map(ex => ({ ...ex, options: shuffle(ex.options) }));
 }

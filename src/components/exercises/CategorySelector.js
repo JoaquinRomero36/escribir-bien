@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { CATEGORIES, getExercisesByCategory, getRandomExercises } from '../../data/exercises';
+import { CATEGORIES, getExercisesByCategory, getRandomExercises, SESSION_LENGTH } from '../../data/exercises';
 import { hasFlashcards } from '../../data/exercises2';
 import { ChevronRightIcon, LockIcon } from '../icons';
 
 export function CategorySelector({ onSelect, onStudy, onBack }) {
   const [hoveredId, setHoveredId] = useState(null);
-
-  const SESSION_LENGTH = 10;
 
   const handleCategoryClick = (category) => {
     const exercises = getRandomExercises(category.id, SESSION_LENGTH);

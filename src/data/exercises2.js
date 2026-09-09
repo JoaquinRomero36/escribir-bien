@@ -163,6 +163,15 @@ function generateMisspellings(word, category) {
   return out;
 }
 
+export function shuffle(array) {
+  const a = [...array];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export function getSmartOptions(word, category, preferred) {
   const w = word.replace(/\(incorrecto\)/gi, '').trim();
   const key = w.toLowerCase();
@@ -185,7 +194,7 @@ export function getSmartOptions(word, category, preferred) {
     if (!distractors.includes(m)) distractors.push(m);
   });
 
-  return [w, ...distractors.slice(0, 2)].sort(() => Math.random() - 0.5);
+  return shuffle([w, ...distractors.slice(0, 2)]);
 }
 
 /* ==================== COMPLETAR ORACION → MC ==================== */

@@ -7,6 +7,7 @@ import { CategorySelector } from './components/exercises/CategorySelector';
 import { FlashcardView } from './components/study/FlashcardView';
 import { InteractiveLetters } from './components/InteractiveLetters';
 import { Logo } from './components/Logo';
+import { getRandomExercises, SESSION_LENGTH } from './data/exercises';
 import {
   TargetIcon,
   CardsIcon,
@@ -442,9 +443,12 @@ function AppContent() {
   }, []);
 
   const handleRetry = useCallback(() => {
+    if (selectedCategory) {
+      setExercises(getRandomExercises(selectedCategory.id, SESSION_LENGTH));
+    }
     setView('exercise');
     setExerciseResult(null);
-  }, []);
+  }, [selectedCategory]);
 
   const handleHome = useCallback(() => {
     setView('categories');
